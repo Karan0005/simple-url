@@ -1,0 +1,88 @@
+@import '../../../../variables.scss';
+
+.service-section {
+    width: 90%;
+
+    .service-info {
+        h1 {
+            color: $heading-color;
+            line-height: 80px;
+            font-weight: 400;
+            font-size: 50px;
+            margin-bottom: 0px !important;
+        }
+
+        p {
+            color: $text-color;
+            font-weight: 400;
+            width: 90%;
+            letter-spacing: 0.2px;
+            line-height: 1.5;
+            font-size: 18px;
+        }
+    }
+
+    .service-features {
+        margin-bottom: 40px;
+        .feature-item {
+            border-radius: 5px;
+            background-color: #303030;
+            border: none !important; // initial border style
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; // smooth transition
+            padding: 20px; // ensure padding is added to avoid content touching borders
+            position: relative; // ensure positioning context for potential shadow or effects
+            text-align: center;
+            padding-top: 40px !important;
+
+            img {
+                width: 40px !important;
+                height: 40px !important;
+                margin: auto;
+            }
+
+            h4 {
+                font-weight: 400;
+                color: $primary-color;
+                font-size: 23px;
+            }
+
+            p {
+                color: $text-color;
+                letter-spacing: 0.3px;
+                font-weight: 400;
+                line-height: 23px;
+                font-size: 15px;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}
+@media (max-width: 1200px) {
+    .service-section {
+        .service-info {
+            h1 {
+                line-height: 55px !important;
+                margin-bottom: 15px !important;
+            }
+            p {
+                width: 100%;
+            }
+        }
+    }
+}
+@media (max-width: 768px) {
+    .service-section {
+        .service-info {
+            h1 {
+                line-height: 45px !important;
+                font-size: 40px !important;
+            }
+            p {
+                width: 100%;
+            }
+        }
+    }
+}

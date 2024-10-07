@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+@import './variables.scss';
+
+@font-face {
+    font-family: 'Roboto', Arial, sans-serif;
+    src: url('assets/fonts/roboto/bold.ttf') format('truetype'),
+        url('assets/fonts/roboto/light.ttf') format('truetype'),
+        url('assets/fonts/roboto/medium.ttf') format('truetype'),
+        url('assets/fonts/roboto/regular.ttf') format('truetype'),
+        url('assets/fonts/roboto/thin.ttf') format('truetype');
+}
+
+body {
+    background-color: $bg-color !important;
+}
+* {
+    box-sizing: border-box !important;
+}

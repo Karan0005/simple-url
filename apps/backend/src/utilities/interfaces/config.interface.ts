@@ -7,6 +7,15 @@ export interface IApplicationConfiguration {
         appBaseURL: string;
         secret: string;
     };
+    redis: {
+        minVersion: string;
+        host: string;
+        port: number;
+    };
+    mongodb: {
+        minVersion: string;
+        uri: string;
+    };
 }
 
 export interface ISecretManagerConfig {

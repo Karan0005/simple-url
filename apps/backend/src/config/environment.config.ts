@@ -51,6 +51,15 @@ export function environment(): IApplicationConfiguration {
             apiBaseURL: getAPIBaseURL(appEnv),
             appBaseURL: getAPPBaseURL(appEnv),
             secret: serverSecret
+        },
+        redis: {
+            minVersion: process.env['MIN_REDIS_VERSION'] ?? '7.0.0',
+            host: process.env.REDIS_HOST ?? '127.0.0.1',
+            port: process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379
+        },
+        mongodb: {
+            minVersion: process.env['MIN_MONGO_VERSION'] ?? '8.0.0',
+            uri: process.env.MONGO_CONNECTION_URI ?? 'mongodb://localhost:27017/'
         }
     };
 }

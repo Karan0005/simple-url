@@ -1,16 +1,16 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ShortLinkEntity } from '../../entities'; // Adjust the path as needed
+import { ShortLinkEntity } from '../../entities';
 import { RedisService } from '../redis/redis.service';
-import { UniqueStringService } from './unique-string.service';
+import { RedirectService } from './redirect.service';
 
-describe('UniqueStringService', () => {
-    let service: UniqueStringService;
+describe('RedirectService', () => {
+    let service: RedirectService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                UniqueStringService,
+                RedirectService,
                 {
                     provide: getModelToken(ShortLinkEntity.name),
                     useValue: {
@@ -20,13 +20,14 @@ describe('UniqueStringService', () => {
                 {
                     provide: RedisService,
                     useValue: {
-                        exists: jest.fn()
+                        get: jest.fn(),
+                        set: jest.fn()
                     }
                 }
             ]
         }).compile();
 
-        service = module.get<UniqueStringService>(UniqueStringService);
+        service = module.get<RedirectService>(RedirectService);
     });
 
     it('should be defined', () => {

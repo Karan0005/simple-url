@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { ExceptionProcessor, ResponseProcessor } from '@backend/utilities';
 import { BaseMessage, EnvironmentEnum } from '@full-stack-project/shared';
-import { ValidationPipe } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -75,7 +75,9 @@ async function bootstrap() {
     app.useLogger(appLogger);
 
     // Set a global route prefix (e.g., '/api')
-    app.setGlobalPrefix(routePrefix);
+    app.setGlobalPrefix(routePrefix, {
+        exclude: [{ path: ':shortLink', method: RequestMethod.GET }]
+    });
 
     // Apply global validation with transformation and strict whitelisting
     app.useGlobalPipes(

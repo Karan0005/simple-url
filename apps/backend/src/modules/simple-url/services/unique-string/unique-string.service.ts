@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { randomBytes } from 'crypto';
 import { Model } from 'mongoose';
-import { ShortLinkDocument, ShortLinkEntity } from '../../models';
+import { ShortLinkDocument, ShortLinkEntity } from '../../entities';
 import { RedisService } from '../redis/redis.service';
 
 @Injectable()
@@ -31,15 +31,17 @@ export class UniqueStringService {
      * Checks if a generated string is unique across Redis and MongoDB.
      * @param shortLink - The generated Base62 string.
      */
-    private async isUnique(shortUrl: string): Promise<boolean> {
+    private async isUnique(shortLink: string): Promise<boolean> {
         // Check in Redis
-        const redisResult = await this.redisService.exists(shortUrl);
+        const redisResult = await this.redisService.exists(shortLink);
         if (redisResult) {
             return false;
         }
 
         // Check in MongoDB
-        const mongoResult = await this.shortLinkModel.findOne({ shortUrl }).exec();
+        const mongoResult: ShortLinkDocument | null = await this.shortLinkModel.findOne({
+            ShortLink: shortLink
+        });
         if (mongoResult) {
             return false;
         }

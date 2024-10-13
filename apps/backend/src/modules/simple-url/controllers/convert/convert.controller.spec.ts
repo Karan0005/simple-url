@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConvertService } from '../../services';
 import { ConvertController } from './convert.controller';
 
 describe('ConvertController', () => {
@@ -6,7 +7,18 @@ describe('ConvertController', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            controllers: [ConvertController]
+            controllers: [ConvertController],
+            providers: [
+                {
+                    provide: ConvertService,
+                    useValue: {
+                        createShortLink: jest.fn(),
+                        createShortLinkBulk: jest.fn(),
+                        updateShortLink: jest.fn(),
+                        deleteShortLink: jest.fn()
+                    }
+                }
+            ]
         }).compile();
 
         controller = module.get<ConvertController>(ConvertController);

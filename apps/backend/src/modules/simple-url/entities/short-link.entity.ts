@@ -6,7 +6,7 @@ export type ShortLinkDocument = ShortLinkEntity & Document;
 @Schema({ collection: 'ShortLink', versionKey: false })
 export class ShortLinkEntity {
     @Prop({ required: true, type: String, trim: true, minlength: 10, maxlength: 2048 })
-    originalUrl!: string;
+    OriginalLink!: string;
 
     @Prop({
         required: true,
@@ -16,19 +16,19 @@ export class ShortLinkEntity {
         length: 8,
         trim: true
     })
-    shortUrl!: string;
+    ShortLink!: string;
 
     @Prop({ type: Date, default: null })
-    expirationDate?: Date | null;
+    ExpirationDate?: Date | null;
 
     @Prop({ default: false, type: Boolean })
-    isDeleted!: boolean;
+    IsDisabled!: boolean;
 }
 
 export const ShortLinkSchema = SchemaFactory.createForClass(ShortLinkEntity);
 
-// TTL index for automatic deletion based on expirationDate
-ShortLinkSchema.index({ expirationDate: 1 }, { expireAfterSeconds: 0 });
+// TTL index for automatic deletion based on ExpirationDate
+ShortLinkSchema.index({ ExpirationDate: 1 }, { expireAfterSeconds: 0 });
 
-// Sharding index based on shortUrl to distribute records across shards
-ShortLinkSchema.index({ shortUrl: 1 }, { unique: true });
+// Sharding index based on ShortLink to distribute records across shards
+ShortLinkSchema.index({ ShortLink: 1 }, { unique: true });

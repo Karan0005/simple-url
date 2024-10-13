@@ -10,8 +10,7 @@ dotenv.config({ path: path.resolve(process.env.PWD ?? process.cwd(), '.env') });
 
 const host = 'localhost';
 const port = process.env.PORT_BACKEND ?? '8000';
-const routePrefix = process.env.ROUTE_PREFIX ?? 'api';
-axios.defaults.baseURL = `http://${host}:${port}/${routePrefix}`;
+axios.defaults.baseURL = `http://${host}:${port}`;
 
 const startBackendServer = async (): Promise<void> => {
     return new Promise((resolve, reject) => {

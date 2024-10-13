@@ -10,7 +10,7 @@ describe('GET /api', () => {
 
 describe('GET /api/health', () => {
     it('It should success checking health route', async () => {
-        const res = await axios.get(`/api/health`);
+        const res = await axios.get(`/health`);
         expect(res.status).toBe(200);
         expect(res.data.IsSuccess).toBe(true);
     });

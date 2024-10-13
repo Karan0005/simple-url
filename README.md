@@ -314,7 +314,7 @@ curl --location 'http://localhost:8000/api/short-link/create/v1' \
     "Message": "Success",
     "Data": {
         "OriginalLink": "https://www.instagram.com/samcrist2244/",
-        "ShortLink": "http://128.199.31.53:8000/aV5EE2zP"
+        "ShortLink": "http://localhost:8000/aV5EE2zP"
     },
     "Errors": []
 }

@@ -14,11 +14,21 @@ services:
             - TENANT_ID=${TENANT_ID}
             - CLIENT_ID=${CLIENT_ID}
             - CLIENT_SECRET=${CLIENT_SECRET}
+            - REDIS_HOST=redis
+            - REDIS_PORT=${REDIS_PORT}
+            - MIN_REDIS_VERSION=${MIN_REDIS_VERSION}
+            - MIN_MONGO_VERSION=${MIN_MONGO_VERSION}
+            - MONGO_CONNECTION_URI=mongodb://mongo:27017/
+            - MONGO_DB_NAME=${MONGO_DB_NAME}
         image: backend_image
         container_name: backend_container
         ports:
             - '${PORT_BACKEND}:${PORT_BACKEND}'
         privileged: true
+        depends_on:
+            - redis
+            - mongo
+
     frontend:
         build:
             context: .
@@ -36,3 +46,21 @@ services:
             - '${PORT_FRONTEND}:${PORT_FRONTEND}'
         depends_on:
             - backend
+    redis:
+        image: redis:7
+        environment:
+            - REDIS_PORT=${REDIS_PORT}
+        container_name: redis_container
+        volumes:
+            - redis_data:/app/redis-data
+    mongo:
+        image: mongo:8
+        container_name: mongo_container
+        volumes:
+            - mongo_data:/data/db
+
+volumes:
+    redis_data:
+        name: redis_data
+    mongo_data:
+        name: mongo_data

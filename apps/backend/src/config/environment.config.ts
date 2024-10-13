@@ -59,7 +59,8 @@ export function environment(): IApplicationConfiguration {
         },
         mongodb: {
             minVersion: process.env['MIN_MONGO_VERSION'] ?? '8.0.0',
-            uri: process.env.MONGO_CONNECTION_URI ?? 'mongodb://localhost:27017/'
+            uri: process.env.MONGO_CONNECTION_URI ?? 'mongodb://localhost:27017/',
+            dbName: process.env.MONGO_DB_NAME ?? 'simple-url'
         }
     };
 }

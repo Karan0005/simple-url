@@ -6,6 +6,6 @@ export const MongoConnectionFactory = async (
 ): Promise<MongooseModuleFactoryOptions> => {
     return {
         uri: configService.get<string>('mongodb.uri'),
-        dbName: 'simple-url'
+        dbName: configService.get<string>('mongodb.dbName')
     };
 };

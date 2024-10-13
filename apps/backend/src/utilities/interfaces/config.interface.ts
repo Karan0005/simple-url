@@ -15,6 +15,7 @@ export interface IApplicationConfiguration {
     mongodb: {
         minVersion: string;
         uri: string;
+        dbName: string;
     };
 }
 

@@ -28,10 +28,10 @@ export class AppService {
 
     checkHealth(): Promise<HealthCheckResult> {
         return this.health.check([
-            // The process should not use more than 300MB memory
-            () => this.memoryHealthIndicator.checkHeap('HEAP_Memory', 300 * 1024 * 1024),
-            // The process should not have more than 300MB RSS memory allocated
-            () => this.memoryHealthIndicator.checkRSS('RSS_Memory', 300 * 1024 * 1024),
+            // The process should not use more than 1024MB memory
+            () => this.memoryHealthIndicator.checkHeap('HEAP_Memory', 1024 * 1024 * 1024),
+            // The process should not have more than 1024MB RSS memory allocated
+            () => this.memoryHealthIndicator.checkRSS('RSS_Memory', 1024 * 1024 * 1024),
             // The used disk storage should not exceed the 90% of the available space
             () =>
                 this.diskHealthIndicator.checkStorage('DISK_Health', {

@@ -1,6 +1,12 @@
 # Use an image with the specified Node.js and npm versions
 FROM node:20.17.0 AS build
 
+# Install Docker CLI and redis-tools
+RUN apt-get update && apt-get install -y \
+    redis-tools \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy complete code base to docker
 COPY . /app
 

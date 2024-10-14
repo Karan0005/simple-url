@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -10,6 +12,8 @@ import { RestApiService } from './services';
     declarations: [PageNotFoundComponent, LandingPageComponent],
     imports: [
         CommonModule,
+        FormsModule,
+        BrowserAnimationsModule,
         ToastrModule.forRoot({
             preventDuplicates: true
         })

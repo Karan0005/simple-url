@@ -1,106 +1,163 @@
-<div class="service-section container-xxl">
-    <div class="service-info">
-        <h1 class="main-heading text-center pt-5 pb-1">World's Smartest Web App Boilerplate</h1>
-        <p class="sub-heading lead text-center mx-auto pb-3">
-            This web development boilerplate streamlines the setup and development of scalable
-            applications using NX Dev Tools, Angular, and NestJS, with integrated Docker for
-            containerized deployments, robust testing via Jest, and automated CI/CD pipelines for
-            seamless and error-free production releases.
-        </p>
+<!-- Navbar -->
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Short Link Manager</a>
     </div>
+</nav>
 
-    <div class="service-features pt-4">
-        <div class="row g-4 d-flex flex-wrap">
-            <!-- Adds spacing between columns -->
-            <div class="col-12 col-sm-6 col-lg-4 d-flex">
-                <div class="feature-item p-4 border rounded text-center">
-                    <img
-                        src="../../../../assets/images/server.png"
-                        alt="icon"
-                        class="mb-3 feature-icon"
-                    />
-                    <h4 class="mb-3">Dynamic Environment Setup</h4>
-                    <p class="mb-0">
-                        Supports parameterized environment configurations for different stages
-                        (local, dev, UAT, production), simplifying environment-specific setup and
-                        transitions, reducing manual efforts and potential errors.
-                    </p>
+<div class="container mt-5">
+    <ul class="nav nav-tabs" id="linkTabs">
+        <li class="nav-item">
+            <button
+                class="nav-link active"
+                id="create-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#create"
+                type="button"
+                role="tab"
+                aria-controls="create"
+                aria-selected="true"
+            >
+                Create Short Link
+            </button>
+        </li>
+        <li class="nav-item">
+            <button
+                class="nav-link"
+                id="manage-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#manage"
+                type="button"
+                role="tab"
+                aria-controls="manage"
+                aria-selected="false"
+            >
+                Manage Short Links
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="linkTabsContent">
+        <!-- Create Short Link Section -->
+        <div
+            class="tab-pane fade show active"
+            id="create"
+            role="tabpanel"
+            aria-labelledby="create-tab"
+        >
+            <div class="card mt-4">
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="longUrl" class="form-label">Long URL</label>
+                            <input
+                                name="originalLink"
+                                type="url"
+                                class="form-control"
+                                id="longUrl"
+                                placeholder="Enter your long URL"
+                                required
+                                [(ngModel)]="shortLinkRequest.OriginalLink"
+                            />
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input
+                                name="qrCodeSwitch"
+                                class="form-check-input"
+                                type="checkbox"
+                                id="qrCodeSwitch"
+                                [(value)]="isQRCodeEnabled"
+                                (change)="onQrCodeSwitchChange($event)"
+                            />
+                            <label class="form-check-label" for="qrCodeSwitch"
+                                >Generate QR Code</label
+                            >
+                            <div id="qrHelp" class="form-text">
+                                Choose to create a downloadable QR code instead of a short link.
+                            </div>
+                        </div>
+                        <div class="mb-3" *ngIf="!isQRCodeEnabled">
+                            <label for="expiry" class="form-label">Expiration</label>
+                            <select
+                                name="expiry"
+                                class="form-select"
+                                id="expiry"
+                                [(ngModel)]="shortLinkRequest.ExpireTime"
+                            >
+                                <option *ngFor="let expire of linkExpiry" [value]="expire.value">
+                                    {{ expire.label }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <button type="button" class="btn btn-primary w-100" (click)="convert()">
+                            Convert
+                        </button>
+                    </form>
+                    <div class="mb-3" *ngIf="shortLink && !isQRCodeEnabled">
+                        <label for="shortUrl" class="form-label">Short URL</label>
+                        <input
+                            name="shortLink"
+                            type="url"
+                            class="form-control"
+                            id="shortUrl"
+                            readonly
+                            [(ngModel)]="shortLink"
+                        />
+                    </div>
+
+                    <div
+                        *ngIf="isQRCodeEnabled"
+                        [ngClass]="{ 'display-none': !downloadableQRImage }"
+                    >
+                        <canvas #canvas></canvas>
+                        <a href="{{ downloadableQRImage }}" download="qrcode.jpg">
+                            Download QR Code
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-12 col-sm-6 col-lg-4 d-flex">
-                <div class="feature-item p-4 border rounded text-center">
-                    <img
-                        src="../../../../assets/images/code-checking.png"
-                        alt="icon"
-                        class="mb-3 feature-icon"
-                    />
-                    <h4 class="mb-3">Strict Code Quality Checkpoints</h4>
-                    <p class="mb-0">
-                        Ensures high-quality code with strict enforcement of linting rules, code
-                        consistency, memory usage optimization, and prevention of syntax errors,
-                        providing peace of mind for large-scale projects.
-                    </p>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4 d-flex">
-                <div class="feature-item p-4 border rounded text-center">
-                    <img
-                        src="../../../../assets/images/integration.png"
-                        alt="icon"
-                        class="mb-3 feature-icon"
-                    />
-                    <h4 class="mb-3">Seamless Docker Integration</h4>
-                    <p class="mb-0">
-                        Pre-configured Docker setups for both frontend and backend allow for local
-                        testing and easy deployment across environments. It ensures consistent
-                        performance across all stages of development and production.
-                    </p>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4 d-flex">
-                <div class="feature-item p-4 border rounded text-center">
-                    <img
-                        src="../../../../assets/images/unified.png"
-                        alt="icon"
-                        class="mb-3 feature-icon"
-                    />
-                    <h4 class="mb-3">Unified Testing Framework</h4>
-                    <p class="mb-0">
-                        Uses Jest for both unit and end-to-end testing across frontend (Angular) and
-                        backend (NestJS) applications, offering a uniform testing experience and
-                        maintaining high test coverage.
-                    </p>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4 d-flex">
-                <div class="feature-item p-4 border rounded text-center">
-                    <img
-                        src="../../../../assets/images/upgrade.png"
-                        alt="icon"
-                        class="mb-3 feature-icon"
-                    />
-                    <h4 class="mb-3">Powerful Upgrade Command</h4>
-                    <p class="mb-0">
-                        A robust upgrade command handles the complex task of upgrading Angular,
-                        NestJS, NX Workspace, and npm dependencies. If any issues arise during the
-                        upgrade, it automatically rolls back to the previous stable state.
-                    </p>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4 d-flex">
-                <div class="feature-item p-4 border rounded text-center">
-                    <img
-                        src="../../../../assets/images/scaffolding.png"
-                        alt="icon"
-                        class="mb-3 feature-icon"
-                    />
-                    <h4 class="mb-3">Scaffolding and Common Library</h4>
-                    <p class="mb-0">
-                        Includes interactive commands to scaffold modules for both frontend and
-                        backend projects, along with a common library for shared resources
-                        (constants, interfaces, enumerations), promoting reusability and efficiency
-                        in development.
-                    </p>
+        </div>
+
+        <!-- Manage Short Links Section -->
+        <div class="tab-pane fade" id="manage" role="tabpanel" aria-labelledby="manage-tab">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="searchShortLink" class="form-label">Search Short Link</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="searchShortLink"
+                            placeholder="Enter short link to search"
+                        />
+                    </div>
+
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Original URL</th>
+                                    <th>Short Link</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>https://example.com/very-long-url</td>
+                                    <td>https://short.ly/xyz123</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-sm me-2">Edit</button>
+                                        <button class="btn btn-danger btn-sm me-2">Delete</button>
+                                        <button class="btn btn-warning btn-sm me-2">Disable</button>
+                                    </td>
+                                </tr>
+                                <!-- Add more rows dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

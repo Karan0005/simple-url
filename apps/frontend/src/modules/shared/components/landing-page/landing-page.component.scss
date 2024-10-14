@@ -1,88 +1,98 @@
-@import '../../../../variables.scss';
+// Variables for color customization
+$primary-color: #6c63ff;
+$secondary-color: #343a40;
+$danger-color: #dc3545;
+$success-color: #28a745;
+$warning-color: #ffc107;
+$bg-gradient-start: #ece9e6;
+$bg-gradient-end: #ffffff;
 
-.service-section {
-    width: 90%;
-
-    .service-info {
-        h1 {
-            color: $heading-color;
-            line-height: 80px;
-            font-weight: 400;
-            font-size: 50px;
-            margin-bottom: 0px !important;
-        }
-
-        p {
-            color: $text-color;
-            font-weight: 400;
-            width: 90%;
-            letter-spacing: 0.2px;
-            line-height: 1.5;
-            font-size: 18px;
-        }
-    }
-
-    .service-features {
-        margin-bottom: 40px;
-        .feature-item {
-            border-radius: 5px;
-            background-color: #303030;
-            border: none !important; // initial border style
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; // smooth transition
-            padding: 20px; // ensure padding is added to avoid content touching borders
-            position: relative; // ensure positioning context for potential shadow or effects
-            text-align: center;
-            padding-top: 40px !important;
-
-            img {
-                width: 40px !important;
-                height: 40px !important;
-                margin: auto;
-            }
-
-            h4 {
-                font-weight: 400;
-                color: $primary-color;
-                font-size: 23px;
-            }
-
-            p {
-                color: $text-color;
-                letter-spacing: 0.3px;
-                font-weight: 400;
-                line-height: 23px;
-                font-size: 15px;
-            }
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
+// Mixin for button hover effects
+@mixin button-hover($bg-color, $hover-color) {
+    background-color: $bg-color;
+    &:hover {
+        background-color: $hover-color;
     }
 }
-@media (max-width: 1200px) {
-    .service-section {
-        .service-info {
-            h1 {
-                line-height: 55px !important;
-                margin-bottom: 15px !important;
-            }
-            p {
-                width: 100%;
-            }
-        }
+
+// Body Styling
+body {
+    background: linear-gradient(to right, $bg-gradient-start, $bg-gradient-end);
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+// Navbar Styling
+.navbar {
+    background-color: $secondary-color;
+
+    .navbar-brand {
+        font-weight: bold;
+        color: #ffffff !important;
     }
 }
+
+// Card Styling
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+// Button Styles
+.btn-primary {
+    @include button-hover($primary-color, darken($primary-color, 10%));
+    border: none;
+}
+
+.btn-danger {
+    @include button-hover($danger-color, darken($danger-color, 10%));
+    border: none;
+}
+
+.btn-success {
+    @include button-hover($success-color, darken($success-color, 10%));
+    border: none;
+}
+
+.btn-secondary {
+    @include button-hover($secondary-color, darken($secondary-color, 10%));
+    border: none;
+}
+
+.btn-warning {
+    @include button-hover($warning-color, darken($warning-color, 10%));
+    color: $secondary-color;
+    border: none;
+}
+
+// Form Labels
+.form-label {
+    font-weight: bold;
+}
+
+// Tabs Styling
+.nav-tabs .nav-link.active {
+    background-color: $primary-color;
+    color: white;
+    border-color: $primary-color;
+}
+
+.tab-content {
+    padding: 20px;
+}
+
+// Responsive Table & Adjustments for Smaller Screens
 @media (max-width: 768px) {
-    .service-section {
-        .service-info {
-            h1 {
-                line-height: 45px !important;
-                font-size: 40px !important;
-            }
-            p {
-                width: 100%;
-            }
-        }
+    .form-check-label {
+        font-size: 0.9rem;
     }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+
+.display-none {
+    display: none;
 }

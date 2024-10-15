@@ -61,3 +61,25 @@ export class DeleteShortLinkResponse<T> extends APISuccessResponse<T> implements
     })
     declare Data: T;
 }
+
+export class GetShortLinkListResponse<T> extends APISuccessResponse<T> implements IBaseResponse<T> {
+    @ApiProperty({
+        example: {
+            TotalItems: 3,
+            CurrentPage: 1,
+            TotalPages: 1,
+            LinkBaseURL: 'http://localhost:8000',
+            ShortLinks: [
+                {
+                    _id: '670b76970a2e7f2b4bf55c55',
+                    OriginalLink: 'https://www.instagram.com/kairagupta0005/',
+                    ShortLink: '123hZfdO',
+                    ExpirationDate: null,
+                    IsDisabled: false
+                }
+            ]
+        },
+        description: BaseMessage.SwaggerMessage.Property.Description.Data
+    })
+    declare Data: T;
+}

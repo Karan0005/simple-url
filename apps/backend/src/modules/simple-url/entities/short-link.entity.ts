@@ -31,4 +31,4 @@ export const ShortLinkSchema = SchemaFactory.createForClass(ShortLinkEntity);
 ShortLinkSchema.index({ ExpirationDate: 1 }, { expireAfterSeconds: 0 });
 
 // Sharding index based on ShortLink to distribute records across shards
-ShortLinkSchema.index({ ShortLink: 1 }, { unique: true });
+ShortLinkSchema.index({ ShortLink: 1 }, { unique: true, background: true });

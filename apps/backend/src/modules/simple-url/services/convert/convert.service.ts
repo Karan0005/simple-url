@@ -4,11 +4,16 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ShortLinkDocument, ShortLinkEntity } from '../../entities';
-import { IConvertService, ICreateShortLinkResponse } from '../../interfaces';
+import {
+    IConvertService,
+    ICreateShortLinkResponse,
+    IGetShortLinkListResponse
+} from '../../interfaces';
 import {
     CreateShortLinkBulkValidator,
     CreateShortLinkValidator,
     DeleteShortLinkValidator,
+    GetShortLinkListValidator,
     UpdateShortLinkStatusValidator,
     UpdateShortLinkValidator
 } from '../../validators';
@@ -103,5 +108,33 @@ export class ConvertService implements IConvertService {
 
         // Remove from Redis
         await this.redisService.del(params.ShortLink);
+    }
+
+    async getShortLinkList(params: GetShortLinkListValidator): Promise<IGetShortLinkListResponse> {
+        const { ShortLink, Page = 1, Limit = 10 } = params;
+
+        const query: { ShortLink?: { $regex: string } } = {};
+        if (ShortLink) {
+            query.ShortLink = { $regex: ShortLink };
+        }
+
+        const skip = (Page - 1) * Limit;
+
+        const shortLinks: ShortLinkDocument[] = await this.shortLinkModel
+            .find(query)
+            .skip(skip)
+            .limit(Limit)
+            .sort({ _id: 1 })
+            .exec();
+
+        const totalItems = await this.shortLinkModel.countDocuments(query);
+
+        return {
+            TotalItems: totalItems,
+            CurrentPage: Page,
+            TotalPages: Math.ceil(totalItems / Limit),
+            LinkBaseURL: this.configService.get('server.apiBaseURL') as string,
+            ShortLinks: shortLinks
+        };
     }
 }

@@ -1,13 +1,18 @@
 import { ControllerExceptionProcessor } from '@backend/utilities';
 import { BaseMessage } from '@full-stack-project/shared';
-import { Body, Controller, Delete, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { IConvertController, ICreateShortLinkResponse } from '../../interfaces';
+import {
+    IConvertController,
+    ICreateShortLinkResponse,
+    IGetShortLinkListResponse
+} from '../../interfaces';
 import { ConvertService } from '../../services';
 import {
     CreateShortLinkBulkResponse,
     CreateShortLinkResponse,
     DeleteShortLinkResponse,
+    GetShortLinkListResponse,
     UpdateShortLinkResponse,
     UpdateShortLinkStatusResponse
 } from '../../swagger';
@@ -15,6 +20,7 @@ import {
     CreateShortLinkBulkValidator,
     CreateShortLinkValidator,
     DeleteShortLinkValidator,
+    GetShortLinkListValidator,
     UpdateShortLinkStatusValidator,
     UpdateShortLinkValidator
 } from '../../validators';
@@ -57,7 +63,7 @@ export class ConvertController implements IConvertController {
         }
     }
 
-    @Patch('update/v1/')
+    @Patch('update/v1')
     @ApiOperation({ summary: 'update short link' })
     @ApiResponse({
         status: BaseMessage.SwaggerMessage.Response.Ok.Status,
@@ -72,7 +78,7 @@ export class ConvertController implements IConvertController {
         }
     }
 
-    @Patch('update-status/v1/')
+    @Patch('update-status/v1')
     @ApiOperation({ summary: 'update short link status' })
     @ApiResponse({
         status: BaseMessage.SwaggerMessage.Response.Ok.Status,
@@ -87,16 +93,33 @@ export class ConvertController implements IConvertController {
         }
     }
 
-    @Delete('delete/v1/')
+    @Delete('delete/v1')
     @ApiOperation({ summary: 'delete short link' })
     @ApiResponse({
         status: BaseMessage.SwaggerMessage.Response.Ok.Status,
         description: BaseMessage.SwaggerMessage.Response.Ok.Description,
         type: DeleteShortLinkResponse
     })
-    async deleteShortLink(@Body() params: DeleteShortLinkValidator): Promise<void> {
+    async deleteShortLink(@Query() params: DeleteShortLinkValidator): Promise<void> {
         try {
             await this.convertService.deleteShortLink(params);
+        } catch (error) {
+            throw ControllerExceptionProcessor(error);
+        }
+    }
+
+    @Get('list/v1')
+    @ApiOperation({ summary: 'list of short links' })
+    @ApiResponse({
+        status: BaseMessage.SwaggerMessage.Response.Ok.Status,
+        description: BaseMessage.SwaggerMessage.Response.Ok.Description,
+        type: GetShortLinkListResponse
+    })
+    async getShortLinkList(
+        @Query() params: GetShortLinkListValidator
+    ): Promise<IGetShortLinkListResponse> {
+        try {
+            return await this.convertService.getShortLinkList(params);
         } catch (error) {
             throw ControllerExceptionProcessor(error);
         }

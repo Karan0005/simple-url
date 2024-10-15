@@ -2,6 +2,7 @@ import {
     CreateShortLinkBulkResponse,
     CreateShortLinkResponse,
     DeleteShortLinkResponse,
+    GetShortLinkListResponse,
     UpdateShortLinkResponse,
     UpdateShortLinkStatusResponse
 } from './convert.props.swagger';
@@ -11,6 +12,7 @@ export {
     CreateShortLinkBulkResponse,
     CreateShortLinkResponse,
     DeleteShortLinkResponse,
+    GetShortLinkListResponse,
     RedirectShortLinkResponse,
     UpdateShortLinkResponse,
     UpdateShortLinkStatusResponse

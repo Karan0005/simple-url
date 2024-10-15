@@ -8,6 +8,6 @@ describe('frontend-e2e', () => {
         cy.login('my-email@something.com');
 
         // Function helper example, see `../support/app.po.ts` file
-        getGreeting().contains(/World's Smartest Web App Boilerplate/);
+        getGreeting().contains(/Short Link Manager/);
     });
 });

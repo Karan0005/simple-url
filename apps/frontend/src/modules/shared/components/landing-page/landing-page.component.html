@@ -31,6 +31,7 @@
                 role="tab"
                 aria-controls="manage"
                 aria-selected="false"
+                (click)="list('')"
             >
                 Manage Short Links
             </button>
@@ -130,6 +131,7 @@
                             class="form-control"
                             id="searchShortLink"
                             placeholder="Enter short link to search"
+                            (input)="onSearchChange($event)"
                         />
                     </div>
 
@@ -144,17 +146,64 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>https://example.com/very-long-url</td>
-                                    <td>https://short.ly/xyz123</td>
-                                    <td><span class="badge bg-success">Active</span></td>
+                                <tr *ngFor="let data of shortLinkList.ShortLinks">
                                     <td>
-                                        <button class="btn btn-secondary btn-sm me-2">Edit</button>
-                                        <button class="btn btn-danger btn-sm me-2">Delete</button>
-                                        <button class="btn btn-warning btn-sm me-2">Disable</button>
+                                        <span *ngIf="editingShortLink !== data.ShortLink">{{
+                                            data.OriginalLink
+                                        }}</span>
+                                        <input
+                                            *ngIf="editingShortLink === data.ShortLink"
+                                            type="text"
+                                            class="form-control"
+                                            [(ngModel)]="data.OriginalLink"
+                                        />
+                                    </td>
+                                    <td>{{ shortLinkList.LinkBaseURL + '/' + data.ShortLink }}</td>
+                                    <td>
+                                        <span class="badge bg-primary" *ngIf="!data.IsDisabled"
+                                            >Active</span
+                                        >
+                                        <span class="badge bg-danger" *ngIf="data.IsDisabled"
+                                            >Disabled</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <button
+                                            *ngIf="editingShortLink !== data.ShortLink"
+                                            class="btn btn-secondary btn-sm me-2"
+                                            (click)="editOriginalLink(data.ShortLink)"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            *ngIf="editingShortLink === data.ShortLink"
+                                            class="btn btn-primary btn-sm me-2"
+                                            (click)="saveOriginalLink(data.OriginalLink)"
+                                        >
+                                            Save
+                                        </button>
+                                        <button
+                                            class="btn btn-warning btn-sm me-2"
+                                            *ngIf="!data.IsDisabled"
+                                            (click)="updateStatus(data.ShortLink, true)"
+                                        >
+                                            Disable
+                                        </button>
+                                        <button
+                                            class="btn btn-warning btn-sm me-2"
+                                            *ngIf="data.IsDisabled"
+                                            (click)="updateStatus(data.ShortLink, false)"
+                                        >
+                                            Activate
+                                        </button>
+                                        <button
+                                            class="btn btn-danger btn-sm me-2"
+                                            (click)="delete(data.ShortLink)"
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
-                                <!-- Add more rows dynamically -->
                             </tbody>
                         </table>
                     </div>

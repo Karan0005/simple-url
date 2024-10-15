@@ -1,14 +1,19 @@
+import { NumberTransformProcessor } from '@backend/utilities';
 import { ExpireTimeEnum } from '@full-stack-project/shared';
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 import {
     ArrayMinSize,
     IsArray,
     IsBoolean,
     IsEnum,
     IsNotEmpty,
+    IsNumber,
+    IsOptional,
     IsString,
+    Max,
     MaxLength,
+    Min,
     MinLength,
     ValidateNested
 } from 'class-validator';
@@ -77,8 +82,7 @@ export class UpdateShortLinkStatusValidator {
 
     @IsBoolean({ message: 'IsDisabled must be a boolean' })
     @ApiProperty({
-        description: 'IsDisabled provided by the user to be updated',
-        maxLength: 1000
+        description: 'IsDisabled provided by the user to be updated'
     })
     @IsNotEmpty({ message: 'IsDisabled field is required.' })
     IsDisabled!: boolean;
@@ -93,4 +97,34 @@ export class DeleteShortLinkValidator {
     @MinLength(1, { message: 'ShortLink must not be empty' })
     @MaxLength(100, { message: 'ShortLink is too long' })
     ShortLink!: string;
+}
+
+export class GetShortLinkListValidator {
+    @IsString({ message: 'ShortLink must be a string' })
+    @ApiPropertyOptional({
+        description: 'ShortLink provided by the user to be deleted',
+        maxLength: 100
+    })
+    @MaxLength(100, { message: 'ShortLink is too long' })
+    @IsOptional()
+    ShortLink!: string;
+
+    @IsNotEmpty()
+    @ApiProperty({
+        description: 'Page denotes current page number'
+    })
+    @IsNumber()
+    @Min(1)
+    @Transform(NumberTransformProcessor)
+    Page!: number;
+
+    @IsNotEmpty()
+    @ApiProperty({
+        description: 'Limit denotes records for the current page'
+    })
+    @IsNumber()
+    @Min(1)
+    @Max(100)
+    @Transform(NumberTransformProcessor)
+    Limit!: number;
 }

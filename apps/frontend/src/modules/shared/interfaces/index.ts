@@ -1,3 +1,19 @@
-import { IShortLinkRequest, IShortLinkResponse } from './short.link.interface';
+import {
+    ICreateShortLinkRequest,
+    ICreateShortLinkResponse,
+    IDeleteShortLinkRequest,
+    IGetShortLinkListRequest,
+    IGetShortLinkListResponse,
+    IUpdateShortLinkRequest,
+    IUpdateShortLinkStatusRequest
+} from './short.link.interface';
 
-export { IShortLinkRequest, IShortLinkResponse };
+export {
+    ICreateShortLinkRequest,
+    ICreateShortLinkResponse,
+    IDeleteShortLinkRequest,
+    IGetShortLinkListRequest,
+    IGetShortLinkListResponse,
+    IUpdateShortLinkRequest,
+    IUpdateShortLinkStatusRequest
+};

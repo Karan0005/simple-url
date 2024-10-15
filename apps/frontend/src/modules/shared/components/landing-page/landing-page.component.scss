@@ -1,98 +1,74 @@
-// Variables for color customization
-$primary-color: #6c63ff;
-$secondary-color: #343a40;
-$danger-color: #dc3545;
-$success-color: #28a745;
-$warning-color: #ffc107;
-$bg-gradient-start: #ece9e6;
-$bg-gradient-end: #ffffff;
-
-// Mixin for button hover effects
-@mixin button-hover($bg-color, $hover-color) {
-    background-color: $bg-color;
-    &:hover {
-        background-color: $hover-color;
+@import '../../../../variables.scss';
+@mixin flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+nav {
+    height: 15vh;
+    .navbar-collapse {
+        justify-content: end;
+        ul {
+            li {
+                a {
+                    color: $primary-color;
+                    font-size: 18px;
+                }
+            }
+        }
     }
 }
 
-// Body Styling
-body {
-    background: linear-gradient(to right, $bg-gradient-start, $bg-gradient-end);
-    min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
-}
-
-// Navbar Styling
-.navbar {
-    background-color: $secondary-color;
-
-    .navbar-brand {
-        font-weight: bold;
-        color: #ffffff !important;
+main {
+    height: 85vh;
+    @include flex;
+    h1 {
+        color: $primary-color;
+        font-weight: lighter !important;
+        text-align: center;
+        span {
+            color: #87a2ea;
+            font-weight: bold;
+        }
     }
-}
+    form {
+        background: $primary-color;
+        border-radius: 50px;
+        @include flex;
+        label:nth-child(1) {
+            border-radius: 50px 0px 0px 50px;
+        }
+        /* Hide the default radio buttons */
+        .radio-tabs {
+            display: none;
+        }
 
-// Card Styling
-.card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-}
+        /* Tab container styles */
+        .form-group {
+            display: flex; /* Use flexbox to arrange the tabs */
+        }
 
-// Button Styles
-.btn-primary {
-    @include button-hover($primary-color, darken($primary-color, 10%));
-    border: none;
-}
+        /* Tab button styles */
+        .tab-button {
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid transparent; /* Default border */
+            transition: background-color 0.3s, border-color 0.3s; /* Smooth transition */
+            background: $ternary-color;
+        }
 
-.btn-danger {
-    @include button-hover($danger-color, darken($danger-color, 10%));
-    border: none;
-}
+        /* Active tab styles */
+        .radio-tabs:checked + .tab-button {
+            background-color: $secondary-color; /* Active background color */
+            color: $primary-color; /* Active text color */
+            border-color: $secondary-color; /* Active border color */
+        }
 
-.btn-success {
-    @include button-hover($success-color, darken($success-color, 10%));
-    border: none;
-}
-
-.btn-secondary {
-    @include button-hover($secondary-color, darken($secondary-color, 10%));
-    border: none;
-}
-
-.btn-warning {
-    @include button-hover($warning-color, darken($warning-color, 10%));
-    color: $secondary-color;
-    border: none;
-}
-
-// Form Labels
-.form-label {
-    font-weight: bold;
-}
-
-// Tabs Styling
-.nav-tabs .nav-link.active {
-    background-color: $primary-color;
-    color: white;
-    border-color: $primary-color;
-}
-
-.tab-content {
-    padding: 20px;
-}
-
-// Responsive Table & Adjustments for Smaller Screens
-@media (max-width: 768px) {
-    .form-check-label {
-        font-size: 0.9rem;
+        /* Optional: hover effect for tabs */
+        .tab-button:hover {
+            background-color: #e2e6ea; /* Hover background color */
+        }
     }
-
-    .table-responsive {
-        overflow-x: auto;
-    }
-}
-
-.display-none {
-    display: none;
 }

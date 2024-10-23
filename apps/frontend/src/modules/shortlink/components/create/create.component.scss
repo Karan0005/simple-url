@@ -14,24 +14,27 @@ main {
     height: 85%;
     margin-top: 70px;
     @include flex;
-
-    // Main heading (H1) styling
-    h1 {
-        font-size: 40px;
-        color: $primary-color;
-        font-weight: lighter !important;
-        text-align: center;
-
-        // Icon inside H1 styling
+    .header-area {
         i {
+            color: $primary-color;
+            font-size: 40px;
             position: relative;
-            top: -30px;
+            top: -35px;
+            left: -10px;
         }
 
-        // Styling for colored spans within H1
-        span {
-            color: #87a2ea;
-            font-weight: bold;
+        // Main heading (H1) styling
+        h1 {
+            font-size: 40px;
+            color: $primary-color;
+            font-weight: lighter !important;
+            text-align: center;
+
+            // Styling for colored spans within H1
+            span {
+                color: #87a2ea;
+                font-weight: bold;
+            }
         }
     }
 
@@ -88,13 +91,14 @@ main {
         width: 50%; // Set form width to 50% of the parent
         z-index: 1; // Ensure form is layered correctly
         @include flex; // Use flexbox for layout (assuming a flex mixin)
+        margin-bottom: 50px;
 
         // Form group container styling
         .form-group {
             display: flex; // Flexbox layout for form groups
             width: 100%; // Full width for form group
             justify-content: center; // Center the form group content horizontally
-            padding: 15px; // Padding around the form group
+            padding: 10px; // Padding around the form group
 
             // Validity time section inside form group
             .validity-time {
@@ -226,11 +230,17 @@ main {
 
         // QR code scanner section
         .scanner {
+            width: 100%; /* Make the container take full width of its parent */
+            max-width: 500px; /* Optional: Set a maximum width for the scanner */
+            height: auto; /* Maintain aspect ratio */
+            margin: 0 auto; /* Center the scanner on the page */
             @include flex; // Use flexbox for layout inside the scanner
-
+            margin-top: 15px;
             // QR code image styling
-            img {
-                width: 150px; // Set QR code image width
+            canvas {
+                width: 100% !important; /* Make the canvas responsive */
+                height: auto !important; /* Keep aspect ratio */
+                display: block; /* Remove any gaps below the canvas */
             }
         }
 
@@ -268,12 +278,20 @@ main {
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     .container {
-        max-width: 100%;
+        max-width: 95%;
 
         main {
-            h1 {
-                font-size: 25px;
+            margin-top: 100px;
+            .header-area {
+                i {
+                    font-size: 30px;
+                    left: 0px;
+                }
+                h1 {
+                    font-size: 25px;
+                }
             }
+
             .tab-button {
                 padding: 5px;
                 width: 120px;
@@ -302,13 +320,19 @@ main {
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) and (max-width: 767.98px) {
     .container {
-        max-width: 80%;
+        max-width: 80% !important;
 
         main {
-            h1 {
-                font-size: 30px;
-            }
+            margin-top: 100px;
+            .header-area {
+                i {
+                    left: -0px;
+                }
 
+                h1 {
+                    font-size: 30px;
+                }
+            }
             form {
                 width: 100%;
 
@@ -326,6 +350,7 @@ main {
         max-width: 80%;
 
         main {
+            margin-top: 100px;
             h1 {
                 font-size: 30px;
             }
@@ -365,6 +390,7 @@ main {
         form {
             legend {
                 width: 50%;
+                font-size: 17px;
             }
         }
     }

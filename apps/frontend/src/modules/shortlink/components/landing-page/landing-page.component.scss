@@ -57,5 +57,13 @@ nav {
                 color: #87a2ea !important;
             }
         }
+        .navbar-toggler:focus {
+            box-shadow: none !important;
+        }
+    }
+}
+@media (max-width: 767.98px) {
+    nav {
+        max-width: 90%;
     }
 }

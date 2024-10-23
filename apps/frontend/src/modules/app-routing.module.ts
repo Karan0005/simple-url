@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { NoPreloading, RouterModule, Routes } from '@angular/router';
-import { LandingPageComponent } from './shared/components/landing-page/landing-page.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: LandingPageComponent
+        loadChildren: () => import('./shortlink/shortlink.module').then((m) => m.ShortlinkModule)
     },
     { path: '**', component: PageNotFoundComponent }
 ];

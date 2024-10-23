@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SharedModule } from '../../shared.module';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { ShortLinkRoutingModule } from '../../shortlink-routing.module';
 import { LandingPageComponent } from './landing-page.component';
 
 describe('LandingPageComponent', () => {
@@ -8,8 +10,14 @@ describe('LandingPageComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedModule],
-            declarations: [LandingPageComponent]
+            imports: [ShortLinkRoutingModule, FormsModule],
+            declarations: [LandingPageComponent],
+            providers: [
+                {
+                    provide: ActivatedRoute,
+                    useValue: {}
+                }
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(LandingPageComponent);
@@ -17,7 +25,7 @@ describe('LandingPageComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it('It should success, create component', () => {
         expect(component).toBeTruthy();
     });
 });

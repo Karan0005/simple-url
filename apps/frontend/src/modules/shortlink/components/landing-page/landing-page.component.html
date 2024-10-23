@@ -1,0 +1,45 @@
+<!-- Navbar Section -->
+<nav class="navbar navbar-expand-lg container">
+    <!-- Brand logo (top-left of navbar) -->
+    <a href="#" class="navbar-brand">
+        <!-- Company or website logo -->
+        <img src="../../../../assets/images/Logo.png" alt="logo" />
+    </a>
+
+    <!-- Toggle button for collapsing navbar on smaller screens (mobile view) -->
+    <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+    >
+        <!-- Icon for the toggle button (usually three horizontal lines) -->
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible navbar content -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Navbar links aligned to the right -->
+        <ul class="navbar-nav ml-auto">
+            <!-- `ml-auto` pushes the links to the right -->
+
+            <!-- Create Page Link -->
+            <li class="nav-item">
+                <!-- Router link to 'Create' page, with active state highlighting -->
+                <a routerLink="create" routerLinkActive="active" class="nav-link">Create</a>
+            </li>
+
+            <!-- Manage Page Link -->
+            <li class="nav-item">
+                <!-- Router link to 'Manage' page, with active state highlighting -->
+                <a routerLink="manage" routerLinkActive="active" class="nav-link">Manage</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Angular Router Outlet: Placeholder for rendering route components -->
+<router-outlet></router-outlet>

@@ -6,7 +6,7 @@ import {
     IGetShortLinkListResponse,
     IUpdateShortLinkRequest,
     IUpdateShortLinkStatusRequest
-} from './short.link.interface';
+} from './create.interface';
 
 export {
     ICreateShortLinkRequest,

@@ -1,0 +1,61 @@
+@import '../../../../variables.scss';
+
+nav {
+    .navbar-toggler-icon {
+        filter: invert(1);
+    }
+    .navbar-collapse {
+        justify-content: end;
+
+        ul {
+            li {
+                a {
+                    color: $primary-color;
+                    font-size: 18px;
+                    width: 100px;
+                    display: flex;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+}
+
+.active {
+    background: #a6beff30;
+    padding: 10px;
+    border-radius: 30px;
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    nav {
+        .navbar-collapse {
+            padding: 0px 20px;
+        }
+        .navbar-brand {
+            img {
+                width: 120px;
+            }
+        }
+        ul {
+            li {
+                border-bottom: 1px solid #fff;
+            }
+        }
+    }
+}
+@media (max-width: 991.98px) {
+    nav {
+        ul {
+            li {
+                border-bottom: 1px solid #747474;
+            }
+            .active {
+                background: none;
+                padding: 10px;
+                color: #87a2ea !important;
+            }
+        }
+    }
+}

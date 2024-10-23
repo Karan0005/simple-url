@@ -1,0 +1,44 @@
+@import '../../../../variables.scss';
+.table-records {
+    --bs-table-bg: #182033;
+    --bs-table-color: #fff;
+    border-radius: 35px;
+    overflow: hidden;
+    thead {
+        --bs-table-bg-state: #1d263c;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    tr {
+        th {
+            padding: 20px;
+        }
+        td {
+            padding: 20px;
+            .edit {
+                color: #46a6ff;
+                font-size: 20px;
+                margin-right: 20px;
+            }
+            .delete {
+                color: #d02b2b;
+                font-size: 20px;
+            }
+            .form-check {
+                input {
+                    width: 40px;
+                    height: 20px;
+                }
+            }
+        }
+    }
+    tr:last-child {
+        td {
+            border-bottom: none;
+        }
+    }
+}
+.table-hover > tbody > tr:hover > * {
+    --bs-table-color-state: #fff;
+    --bs-table-bg-state: #1d263c;
+}

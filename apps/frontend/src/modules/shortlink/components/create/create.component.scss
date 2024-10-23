@@ -1,0 +1,371 @@
+// Import necessary variables
+@import '../../../../variables.scss';
+
+// Mixin for Flexbox centering
+@mixin flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+// Main content styling
+main {
+    height: 85%;
+    margin-top: 70px;
+    @include flex;
+
+    // Main heading (H1) styling
+    h1 {
+        font-size: 40px;
+        color: $primary-color;
+        font-weight: lighter !important;
+        text-align: center;
+
+        // Icon inside H1 styling
+        i {
+            position: relative;
+            top: -30px;
+        }
+
+        // Styling for colored spans within H1
+        span {
+            color: #87a2ea;
+            font-weight: bold;
+        }
+    }
+
+    .tab-navigation {
+        display: flex; // Use flexbox to arrange the tabs horizontally
+        margin: 40px; // Add margin around the tab navigation
+
+        // Styles for the shortlink tab
+        .shortlink-tab {
+            border-radius: 50px 0px 0px 50px; // Rounded left corners for the shortlink tab
+        }
+
+        // Styles for the QR code tab
+        .qrcode-tab {
+            border-radius: 0px 50px 50px 0px; // Rounded right corners for the QR code tab
+        }
+
+        // Styles for the active tab
+        .active {
+            background: $secondary-color !important; // Set background color for active tab
+            color: #fff; // Set text color to white for active tab
+        }
+
+        // Tab button styles
+        .tab-button {
+            padding: 10px; // Padding around the button content
+            text-align: center; // Center-align text inside the button
+            cursor: pointer; // Pointer cursor on hover
+            border: 1px solid transparent; // Transparent border for smooth hover transitions
+            width: 150px; // Set a fixed width for each tab button
+            display: flex; // Use flexbox for layout
+            align-items: center; // Vertically center content inside the button
+            justify-content: center; // Horizontally center content inside the button
+            transition: background-color 0.3s, border-color 0.3s; // Smooth transition for background and border changes on hover
+
+            // Icon inside the tab button
+            i {
+                font-size: 25px; // Set icon size
+                margin-right: 5px; // Small space between the icon and the text
+            }
+
+            // Special handling for the QR code icon
+            i.bi.bi-qr-code-scan {
+                font-size: 20px !important; // Slightly smaller icon for QR code
+            }
+        }
+    }
+
+    // Form styling
+    form {
+        background: $primary-color; // Set the background color for the form
+        border-radius: 50px; // Rounded corners for the form
+        padding: 40px; // Padding inside the form
+        width: 50%; // Set form width to 50% of the parent
+        z-index: 1; // Ensure form is layered correctly
+        @include flex; // Use flexbox for layout (assuming a flex mixin)
+
+        // Form group container styling
+        .form-group {
+            display: flex; // Flexbox layout for form groups
+            width: 100%; // Full width for form group
+            justify-content: center; // Center the form group content horizontally
+            padding: 15px; // Padding around the form group
+
+            // Validity time section inside form group
+            .validity-time {
+                display: flex; // Flexbox layout for validity time section
+                width: 100%; // Full width for validity time section
+
+                // Styling for individual form check sections
+                .form-check {
+                    width: 50%; // Each form-check takes up 50% of the space
+
+                    // Change cursor to pointer when hovering over the form-check
+                    :hover {
+                        cursor: pointer;
+                    }
+
+                    // Input styling inside form-check
+                    .form-check-input {
+                        border-color: #adacac; // Set border color for unchecked inputs
+                    }
+
+                    // Checked state styling for input
+                    .form-check-input:checked {
+                        background-color: $secondary-color; // Set background color for checked input
+                        border-color: $secondary-color; // Set border color for checked input
+                    }
+                }
+            }
+        }
+
+        // Styling for input and output link containers
+        .paste-link,
+        .output-link {
+            position: relative; // Position for easier placement of child elements
+            width: 100%; // Full width for input/output containers
+
+            // Styling for the input field
+            input {
+                border-radius: 100px; // Full round edges for input field
+                background-color: #d7d7d7; // Light grey background for input
+                padding: 15px 20px; // Padding inside the input
+            }
+
+            // Custom form control styling
+            .form-control {
+                padding-right: 50px; // Leave space for the button next to input
+                z-index: 1; // Ensure input is layered under the button
+                border-radius: 100px !important; // Full rounded corners for input
+            }
+
+            // Tooltip text styling inside input
+            .input-tooltip {
+                white-space: nowrap; // Prevent line breaks in the tooltip text
+                overflow: hidden; // Hide overflowed text
+                text-overflow: ellipsis; // Add ellipsis for overflowing text
+                padding-right: 70px; // Extra padding for space on the right side
+                box-sizing: border-box; // Ensure padding is included in width calculation
+            }
+
+            // Change cursor to pointer on hover over tooltip
+            .input-tooltip:hover {
+                cursor: pointer;
+            }
+
+            // Styling for button next to input field
+            button {
+                background-color: $secondary-color; // Set button background color
+                border: none; // Remove button border
+                @include flex; // Use flexbox for layout inside the button
+                padding: 10px 20px; // Padding inside the button
+                cursor: pointer; // Change cursor to pointer on hover
+                box-shadow: 2px 2px 8px #c7c7c7, -5px -5px 15px #c7c7c7; // Add box shadow for depth
+                transition: all 0.3s ease; // Smooth transition for hover effects
+                position: absolute; // Position button inside the container
+                top: 10%; // Set button near the top of the container
+                right: 5px; // Set button near the right edge
+                width: 46px; // Set width for the circular button
+                height: 46px; // Set height for the circular button
+                border-radius: 50% !important; // Make button circular
+                color: white; // Set icon color to white
+                z-index: 2; // Ensure button is above the input field
+
+                // Icon styling inside the button
+                i {
+                    font-size: 20px; // Set icon size
+                }
+            }
+
+            // Hover effect for button
+            button:hover {
+                box-shadow: 2px 2px 10px #a6a6a6, -2px -2px 10px #ffffff; // Add deeper shadow on hover
+            }
+
+            // Active button state styling
+            button:active {
+                box-shadow: 5px 5px 10px #a6a6a6, inset 5px 5px 10px #1a1a1a; // Inset shadow for pressed effect
+                transform: translateY(1); // Slightly move the button up when clicked
+            }
+        }
+
+        // Error message styling
+        .error-message {
+            width: 93%; // Set error message width
+            color: red; // Error text in red
+            font-size: 14px; // Smaller font size for error message
+            margin-top: 2px; // Small margin on top
+
+            // Paragraph inside error message
+            p {
+                margin-bottom: 0px; // Remove bottom margin for paragraph
+            }
+        }
+
+        // Clear button container styling
+        .clear {
+            button {
+                background: $secondary-color; // Background color for the button
+                color: $primary-color; // Button text color
+                border: none; // Remove border from button
+                padding: 10px 30px; // Padding inside the button
+                border-radius: 30px; // Rounded corners for the button
+                margin-top: 15px; // Margin on top of the button
+            }
+        }
+
+        // Hide elements when needed
+        .display-none {
+            display: none; // Completely hide this element
+        }
+
+        // QR code scanner section
+        .scanner {
+            @include flex; // Use flexbox for layout inside the scanner
+
+            // QR code image styling
+            img {
+                width: 150px; // Set QR code image width
+            }
+        }
+
+        // QR code download/print button container
+        .scanner-button {
+            display: flex; // Flexbox layout for button container
+            padding: 5px; // Padding around the container
+            justify-content: center; // Center-align the buttons
+
+            // Individual button styling inside the scanner-button container
+            button {
+                background-color: #394462; // Set background color for the button
+                border: none; // Remove border
+                width: 46px; // Set width for the circular button
+                height: 46px; // Set height for the circular button
+                border-radius: 100px; // Make the button circular
+                display: flex; // Flexbox layout for centering content inside the button
+                justify-content: center; // Center-align content horizontally
+                align-items: center; // Center-align content vertically
+                margin: 5px 5px 0 5px; // Margin around the button
+                padding: 20px 40px; // Padding inside the button
+
+                // Icon inside the button
+                i {
+                    color: $primary-color; // Set icon color
+                    font-size: 20px; // Set icon size
+                }
+            }
+        }
+    }
+}
+
+/* Media Queries for Responsive Design */
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    .container {
+        max-width: 100%;
+
+        main {
+            h1 {
+                font-size: 25px;
+            }
+            .tab-button {
+                padding: 5px;
+                width: 120px;
+
+                // Icon inside tab button
+                i {
+                    font-size: 20px;
+                }
+            }
+            form {
+                width: 100%;
+                padding: 20px;
+
+                fieldset.form-group {
+                    display: block;
+                }
+
+                legend {
+                    width: 50%;
+                }
+            }
+        }
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .container {
+        max-width: 80%;
+
+        main {
+            h1 {
+                font-size: 30px;
+            }
+
+            form {
+                width: 100%;
+
+                legend {
+                    width: auto;
+                }
+            }
+        }
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .container {
+        max-width: 80%;
+
+        main {
+            h1 {
+                font-size: 30px;
+            }
+
+            form {
+                width: 90%;
+
+                legend {
+                    width: 70%;
+                }
+            }
+        }
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    main {
+        form {
+            width: 70%;
+        }
+    }
+}
+
+/* Extra large devices (desktops, 1200px and up) */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    main {
+        form {
+            width: 60%;
+        }
+    }
+}
+
+/* XX-Large devices (extra large desktops, 1400px and up) */
+@media (min-width: 1400px) {
+    main {
+        form {
+            legend {
+                width: 50%;
+            }
+        }
+    }
+}

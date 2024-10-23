@@ -1,0 +1,185 @@
+<div class="container">
+    <!-- Main Content Section -->
+    <main class="simple-url">
+        <!-- Page Heading with Title and Sub-title -->
+        <h1 class="display-5">
+            <!-- Icon for decorative purpose with main title -->
+            Link Your World with <span>QR</span> &
+            <span>Short Links</span>
+            <br />
+            <!-- Tagline of the service -->
+            “Effortless Sharing, Anytime, Anywhere"
+        </h1>
+
+        <!-- Tab Navigation to switch between Short Link and QR Code functionalities -->
+        <div class="tab-navigation">
+            <!-- Button for Short Link Tab, active state is bound to the selectedLinkType variable -->
+            <button
+                class="tab-button shortlink-tab"
+                [class.active]="selectedLinkType === 'shortlink'"
+                (click)="onLinkTypeChange('shortlink')"
+            >
+                <!-- Icon for Short Link -->
+                <i class="bi bi-link-45deg"></i> Short Link
+            </button>
+
+            <!-- Button for QR Code Tab, active state is bound to the selectedLinkType variable -->
+            <button
+                class="tab-button qrcode-tab"
+                [class.active]="selectedLinkType === 'qrcode'"
+                (click)="onLinkTypeChange('qrcode')"
+            >
+                <!-- Icon for QR Code -->
+                <i class="bi bi-qr-code-scan"></i> QR Code
+            </button>
+        </div>
+
+        <!-- Form Section that changes dynamically based on the selected link type (Short Link / QR Code) -->
+        <form id="link-form" class="mx-auto">
+            <!-- Short Link Form (visible when the Short Link tab is selected) -->
+            <ng-container *ngIf="selectedLinkType === 'shortlink'">
+                <!-- Section to choose Link Validity duration -->
+                <fieldset class="form-group">
+                    <legend class="col-form-label pt-0">Link Validity</legend>
+                    <div class="validity-time">
+                        <!-- Radio Button for 1-day Validity -->
+                        <div class="form-check">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                id="validity1"
+                                name="validity"
+                                [value]="1"
+                                [(ngModel)]="shortLinkRequest.ExpireTime"
+                                [disabled]="shortLink !== ''"
+                            />
+                            <label class="form-check-label" for="validity1">1 Day</label>
+                        </div>
+                        <!-- Radio Button for 7-day Validity -->
+                        <div class="form-check">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                id="validity2"
+                                name="validity"
+                                [value]="7"
+                                [(ngModel)]="shortLinkRequest.ExpireTime"
+                                [disabled]="shortLink !== ''"
+                            />
+                            <label class="form-check-label" for="validity2">7 Days</label>
+                        </div>
+                        <!-- Radio Button for Lifetime Validity -->
+                        <div class="form-check">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                id="validity3"
+                                name="validity"
+                                [value]="0"
+                                [(ngModel)]="shortLinkRequest.ExpireTime"
+                                [disabled]="shortLink !== ''"
+                            />
+                            <label class="form-check-label" for="validity3">Lifetime</label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Input field for the long URL and button to generate Short Link -->
+                <div class="paste-link input-group">
+                    <input
+                        name="originalLink"
+                        type="url"
+                        id="long-url"
+                        class="form-control input-tooltip"
+                        placeholder="Paste your link here..."
+                        [title]="shortLinkRequest.OriginalLink"
+                        [(ngModel)]="shortLinkRequest.OriginalLink"
+                        required
+                    />
+                    <!-- Submit button for Short Link generation -->
+                    <button class="btn btn-primary" type="button" (click)="convert()">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Error message in case of invalid input -->
+                <div class="error-message" *ngIf="formSubmitted && !shortLinkRequest.OriginalLink">
+                    <p><i class="bi bi-exclamation-circle-fill"></i> This field is required.</p>
+                </div>
+
+                <!-- Display generated Short Link with option to copy -->
+                <div class="output-link input-group mt-3" *ngIf="shortLink">
+                    <input
+                        name="shortLink"
+                        type="text"
+                        id="short-url"
+                        class="form-control input-tooltip"
+                        [(ngModel)]="shortLink"
+                        readonly
+                    />
+                    <!-- Button to copy the generated Short Link -->
+                    <button
+                        class="btn btn-primary"
+                        type="button"
+                        (click)="copyToClipboard(shortLink)"
+                    >
+                        <i class="bi bi-copy"></i>
+                    </button>
+                </div>
+
+                <!-- Clear button, only visible when a short link is generated -->
+                <div class="clear" *ngIf="formSubmitted && shortLink">
+                    <button (click)="onLinkTypeChange()">Clear</button>
+                </div>
+            </ng-container>
+
+            <!-- QR Code Form (visible when the QR Code tab is selected) -->
+            <ng-container *ngIf="selectedLinkType === 'qrcode'">
+                <!-- Input field for the long URL and button to generate QR Code -->
+                <div class="paste-link input-group">
+                    <input
+                        name="originalLink"
+                        type="url"
+                        id="long-url"
+                        class="form-control input-tooltip"
+                        placeholder="Paste your link here..."
+                        [title]="shortLinkRequest.OriginalLink"
+                        [(ngModel)]="shortLinkRequest.OriginalLink"
+                        required
+                    />
+                    <!-- Submit button for QR Code generation -->
+                    <button class="btn btn-primary" type="button" (click)="convert()">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Error message in case of invalid input -->
+                <div class="error-message" *ngIf="formSubmitted && !shortLinkRequest.OriginalLink">
+                    <p><i class="bi bi-exclamation-circle-fill"></i> This field is required.</p>
+                </div>
+
+                <!-- QR Code display and download/print options -->
+                <div [ngClass]="{ 'display-none': !downloadableQRImage }">
+                    <div class="scanner">
+                        <!-- Canvas element to display the generated QR Code -->
+                        <canvas #canvas></canvas>
+                    </div>
+                    <div class="scanner-button">
+                        <!-- Button to download the generated QR Code -->
+                        <button (click)="downloadQRCode()">
+                            <i class="bi bi-download"></i>
+                        </button>
+                        <!-- Button to print the generated QR Code -->
+                        <button (click)="printQRCode()">
+                            <i class="bi bi-printer"></i>
+                        </button>
+                        <!-- Clear button to reset the form -->
+                        <div class="clear">
+                            <button (click)="onLinkTypeChange()">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </form>
+    </main>
+</div>

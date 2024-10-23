@@ -1,40 +1,24 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { IBaseResponse } from '@full-stack-project/shared';
-import { NGXLogger } from 'ngx-logger';
 import { ToastrService } from 'ngx-toastr';
-import * as QRCode from 'qrcode';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { ApiRoute } from '../../constants';
+import { ApiRoute } from '../../../shared/constants';
+import { RestApiService } from '../../../shared/services';
 import {
-    ICreateShortLinkRequest,
-    ICreateShortLinkResponse,
     IDeleteShortLinkRequest,
     IGetShortLinkListRequest,
     IGetShortLinkListResponse,
     IUpdateShortLinkRequest,
     IUpdateShortLinkStatusRequest
 } from '../../interfaces';
-import { RestApiService } from '../../services';
 
 @Component({
-    selector: 'app-landing-page',
-    templateUrl: './landing-page.component.html',
-    styleUrls: ['./landing-page.component.scss']
+    selector: 'app-shortlink-manage',
+    templateUrl: './manage.component.html',
+    styleUrl: './manage.component.scss'
 })
-export class LandingPageComponent {
-    shortLink = '';
-    isQRCodeEnabled = false;
-    downloadableQRImage = '';
-    linkExpiry: { value: number; label: string }[] = [
-        { value: 1, label: '1 Day' },
-        { value: 7, label: '7 Days' },
-        { value: 0, label: 'Lifetime' }
-    ];
-    shortLinkRequest: ICreateShortLinkRequest = {
-        OriginalLink: '',
-        ExpireTime: this.linkExpiry[0].value
-    };
+export class ManageComponent {
     page = 1;
     limit = 10;
     shortLinkList: IGetShortLinkListResponse = {
@@ -45,10 +29,10 @@ export class LandingPageComponent {
         ShortLinks: []
     };
     editingShortLink = '';
+
     private readonly searchSubject: Subject<string> = new Subject();
 
     constructor(
-        private readonly loggerService: NGXLogger,
         private readonly toastr: ToastrService,
         private readonly apiService: RestApiService
     ) {
@@ -57,60 +41,6 @@ export class LandingPageComponent {
             .subscribe((searchText: string) => {
                 this.list(searchText);
             });
-    }
-
-    onQrCodeSwitchChange(event: Event): void {
-        const isChecked = (event.target as HTMLInputElement).checked;
-        this.isQRCodeEnabled = isChecked;
-        this.downloadableQRImage = '';
-        this.shortLink = '';
-    }
-
-    async convert() {
-        if (
-            this.isQRCodeEnabled &&
-            this.shortLinkRequest.OriginalLink &&
-            !this.downloadableQRImage
-        ) {
-            this.generateQRCode();
-            return;
-        }
-
-        if (!this.isQRCodeEnabled && this.shortLinkRequest.OriginalLink) {
-            try {
-                this.shortLinkRequest.ExpireTime = +this.shortLinkRequest.ExpireTime;
-                const response: IBaseResponse<ICreateShortLinkResponse> =
-                    await this.apiService.post<
-                        ICreateShortLinkRequest,
-                        IBaseResponse<ICreateShortLinkResponse>
-                    >(ApiRoute.ShortLink.V1.Create, this.shortLinkRequest);
-
-                if (response.IsSuccess) {
-                    this.shortLink = response.Data.ShortLink;
-                } else {
-                    this.toastr.error(response.Message);
-                }
-            } catch (error) {
-                this.toastr.error(
-                    ((error as HttpErrorResponse).error as IBaseResponse<null>).Message
-                );
-            }
-        }
-    }
-
-    generateQRCode() {
-        const canvas = document.querySelector('canvas');
-        const url = this.shortLinkRequest.OriginalLink;
-
-        QRCode.toCanvas(canvas, url, (error) => {
-            if (error) {
-                this.loggerService.error('Error generating QR code', error);
-                return;
-            }
-
-            const dataUrl = (canvas as HTMLCanvasElement).toDataURL('image/jpg');
-            this.downloadableQRImage = dataUrl;
-        });
     }
 
     async onSearchChange(event: Event) {

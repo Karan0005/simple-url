@@ -30,11 +30,11 @@ export class CreateComponent {
     ) {}
 
     onLinkTypeChange(linkType?: string): void {
-        if (this.selectedLinkType === linkType) {
-            return;
-        }
-
         if (linkType) {
+            if (this.selectedLinkType === linkType) {
+                return;
+            }
+
             this.selectedLinkType = linkType;
         }
 

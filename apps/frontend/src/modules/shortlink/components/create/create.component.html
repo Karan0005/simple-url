@@ -94,10 +94,16 @@
                         placeholder="Paste your link here..."
                         [title]="shortLinkRequest.OriginalLink"
                         [(ngModel)]="shortLinkRequest.OriginalLink"
+                        [disabled]="shortLink !== ''"
                         required
                     />
                     <!-- Submit button for Short Link generation -->
-                    <button class="btn btn-primary" type="button" (click)="convert()">
+                    <button
+                        class="btn btn-primary"
+                        type="button"
+                        (click)="convert()"
+                        [disabled]="shortLink !== ''"
+                    >
                         <i class="bi bi-arrow-right"></i>
                     </button>
                 </div>
@@ -145,10 +151,16 @@
                         placeholder="Paste your link here..."
                         [title]="shortLinkRequest.OriginalLink"
                         [(ngModel)]="shortLinkRequest.OriginalLink"
+                        [disabled]="downloadableQRImage !== ''"
                         required
                     />
                     <!-- Submit button for QR Code generation -->
-                    <button class="btn btn-primary" type="button" (click)="convert()">
+                    <button
+                        class="btn btn-primary"
+                        type="button"
+                        (click)="convert()"
+                        [disabled]="downloadableQRImage !== ''"
+                    >
                         <i class="bi bi-arrow-right"></i>
                     </button>
                 </div>

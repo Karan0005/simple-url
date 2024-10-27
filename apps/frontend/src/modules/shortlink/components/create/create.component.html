@@ -116,10 +116,6 @@
                     <p><i class="bi bi-exclamation-circle-fill"></i> This field is required.</p>
                 </div>
 
-                <div style="margin-top: 30px">
-                    <app-loader></app-loader>
-                </div>
-
                 <!-- Display generated Short Link with option to copy -->
                 <div class="output-link input-group mt-3" *ngIf="shortLink">
                     <input
@@ -143,6 +139,9 @@
                 <!-- Clear button, only visible when a short link is generated -->
                 <div class="clear" *ngIf="formSubmitted && shortLink">
                     <button (click)="onLinkTypeChange()">Clear</button>
+                </div>
+                <div class="loader">
+                    <app-loader></app-loader>
                 </div>
             </ng-container>
 
@@ -177,7 +176,7 @@
                     <p><i class="bi bi-exclamation-circle-fill"></i> This field is required.</p>
                 </div>
 
-                <div style="margin-top: 30px">
+                <div class="loader">
                     <app-loader></app-loader>
                 </div>
 

@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IBaseResponse } from '@full-stack-project/shared';
 import { ToastrService } from 'ngx-toastr';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import { ApiRoute } from '../../../shared/constants';
 import { LoaderService, RestApiService } from '../../../shared/services';
 import {
@@ -18,7 +18,7 @@ import {
     templateUrl: './manage.component.html',
     styleUrl: './manage.component.scss'
 })
-export class ManageComponent implements OnInit {
+export class ManageComponent implements OnInit, OnDestroy {
     page = 1;
     limit = 10;
     shortLinkList: IGetShortLinkListResponse = {
@@ -29,6 +29,7 @@ export class ManageComponent implements OnInit {
         ShortLinks: []
     };
     editingShortLink = '';
+    editingOriginalLink = '';
     searchText = '';
     isListLoading = false;
 
@@ -40,11 +41,17 @@ export class ManageComponent implements OnInit {
         private readonly loaderService: LoaderService
     ) {
         this.searchSubject
-            .pipe(debounceTime(300), distinctUntilChanged())
-            .subscribe((searchText: string) => {
-                this.resetPage();
-                this.searchText = searchText;
-                this.list(this.searchText);
+            .pipe(
+                debounceTime(500),
+                distinctUntilChanged(),
+                switchMap(async (searchText: string) => {
+                    this.resetPage();
+                    this.searchText = searchText;
+                    return await this.getList(this.searchText);
+                })
+            )
+            .subscribe((response) => {
+                this.setGetListResponse(response);
             });
     }
 
@@ -55,11 +62,14 @@ export class ManageComponent implements OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-        this.list('');
+        const response: IBaseResponse<IGetShortLinkListResponse> | undefined = await this.getList(
+            this.searchText
+        );
+        this.setGetListResponse(response);
         window.addEventListener('scroll', this.onScroll.bind(this));
     }
 
-    onScroll(): void {
+    async onScroll(): Promise<void> {
         // Get the total height of the document
         const documentHeight = document.documentElement.scrollHeight;
 
@@ -74,7 +84,9 @@ export class ManageComponent implements OnInit {
 
         // Check if the user has scrolled to the bottom within the threshold
         if (scrollPosition + windowHeight >= documentHeight - threshold) {
-            this.list(this.searchText);
+            const response: IBaseResponse<IGetShortLinkListResponse> | undefined =
+                await this.getList(this.searchText);
+            this.setGetListResponse(response);
         }
     }
 
@@ -89,9 +101,12 @@ export class ManageComponent implements OnInit {
         this.editingShortLink = '';
         this.page = 1;
         this.limit = 10;
+        this.isListLoading = false;
     }
 
-    async list(searchText: string) {
+    async getList(
+        searchText: string
+    ): Promise<IBaseResponse<IGetShortLinkListResponse> | undefined> {
         if (this.isListLoading) {
             return;
         }
@@ -104,31 +119,17 @@ export class ManageComponent implements OnInit {
         this.loaderService.showLoader();
 
         try {
-            const response: IBaseResponse<IGetShortLinkListResponse> =
-                await this.apiService.getWithPayload<
-                    IGetShortLinkListRequest,
-                    IBaseResponse<IGetShortLinkListResponse>
-                >(ApiRoute.ShortLink.V1.List, {
-                    ShortLink: searchText,
-                    Page: this.page,
-                    Limit: this.limit
-                });
-
-            if (response.IsSuccess) {
-                this.shortLinkList.TotalItems = response.Data.TotalItems;
-                this.shortLinkList.CurrentPage = response.Data.CurrentPage;
-                this.shortLinkList.TotalPages = response.Data.TotalPages;
-                this.shortLinkList.LinkBaseURL = response.Data.LinkBaseURL;
-                this.shortLinkList.ShortLinks = [
-                    ...this.shortLinkList.ShortLinks,
-                    ...response.Data.ShortLinks
-                ];
-                this.page++;
-            } else {
-                this.toastr.error(response.Message);
-            }
+            return await this.apiService.getWithPayload<
+                IGetShortLinkListRequest,
+                IBaseResponse<IGetShortLinkListResponse>
+            >(ApiRoute.ShortLink.V1.List, {
+                ShortLink: searchText,
+                Page: this.page,
+                Limit: this.limit
+            });
         } catch (error) {
             this.toastr.error(((error as HttpErrorResponse).error as IBaseResponse<null>).Message);
+            return;
         } finally {
             this.isListLoading = false;
             this.loaderService.hideLoader();
@@ -143,6 +144,14 @@ export class ManageComponent implements OnInit {
             >(ApiRoute.ShortLink.V1.Update, { ShortLink: shortLink, OriginalLink: originalLink });
 
             if (response.IsSuccess) {
+                const target = this.shortLinkList.ShortLinks.find(
+                    (sl) => sl.ShortLink === shortLink
+                );
+
+                if (target) {
+                    target.OriginalLink = originalLink;
+                }
+
                 this.toastr.info(response.Message);
             } else {
                 this.toastr.error(response.Message);
@@ -194,18 +203,46 @@ export class ManageComponent implements OnInit {
         }
     }
 
-    editOriginalLink(shortLink: string) {
+    editOriginalLink(shortLink: string, originalLink: string) {
         this.editingShortLink = shortLink;
+        this.editingOriginalLink = originalLink;
     }
 
-    async saveOriginalLink(originalLink: string) {
-        await this.update(this.editingShortLink, originalLink);
+    async saveOriginalLink() {
+        await this.update(this.editingShortLink, this.editingOriginalLink);
         this.editingShortLink = '';
+        this.editingOriginalLink = '';
     }
 
     copyToClipboard(value: string) {
         navigator.clipboard.writeText(value).then(() => {
             this.toastr.info('Copied to clipboard');
         });
+    }
+
+    setGetListResponse(response: IBaseResponse<IGetShortLinkListResponse> | undefined) {
+        if (!response) {
+            return;
+        }
+
+        if (response.IsSuccess) {
+            this.shortLinkList.TotalItems = response.Data.TotalItems;
+            this.shortLinkList.CurrentPage = response.Data.CurrentPage;
+            this.shortLinkList.TotalPages = response.Data.TotalPages;
+            this.shortLinkList.LinkBaseURL = response.Data.LinkBaseURL;
+            this.shortLinkList.ShortLinks = [
+                ...this.shortLinkList.ShortLinks,
+                ...response.Data.ShortLinks
+            ];
+            this.page++;
+        } else {
+            this.toastr.error(response.Message);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.loaderService.isLoading) {
+            this.loaderService.hideLoader();
+        }
     }
 }

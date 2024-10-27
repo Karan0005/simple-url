@@ -43,6 +43,7 @@
                     padding: 20px; // Padding inside table header cells
                 }
                 td {
+                    vertical-align: middle;
                     padding: 20px; // Padding inside table body cells
                     white-space: nowrap; // Prevent table data from wrapping
 
@@ -53,6 +54,9 @@
                         overflow: hidden; // Hide overflowing text
                         text-overflow: ellipsis; // Display ellipsis (...) for truncated text
                         vertical-align: middle; // Vertically align text in the middle
+                    }
+                    .truncate:hover {
+                        cursor: pointer;
                     }
 
                     // Style the copy button
@@ -120,8 +124,10 @@
     span {
         display: inline-block !important;
         max-width: 220px !important; /* Set max-width to ensure consistency */
+        vertical-align: middle;
     }
 }
+
 /* Media Queries for Responsive Design */
 
 /* Extra small devices (portrait phones, less than 576px) */
@@ -144,7 +150,12 @@
         }
     }
     tr {
+        th {
+            font-size: 16px;
+        }
         td {
+            font-size: 14px;
+            padding: 15px !important;
             .truncate {
                 max-width: 150px !important; // Reduce truncation width for medium screens
             }
@@ -157,11 +168,10 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            vertical-align: middle;
         }
         button {
             i {
-                position: relative;
-                top: -7px;
                 margin-left: 15px !important;
             }
         }
@@ -200,8 +210,6 @@
         }
         button {
             i {
-                position: relative;
-                top: -7px;
                 margin-left: 15px !important;
             }
         }

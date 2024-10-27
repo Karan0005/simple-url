@@ -41,6 +41,11 @@ nav {
         ul {
             li {
                 border-bottom: 1px solid #fff;
+                a {
+                    font-size: 16px !important;
+                    padding-left: 0px;
+                    justify-content: start !important;
+                }
             }
         }
     }

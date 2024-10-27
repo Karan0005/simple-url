@@ -270,6 +270,10 @@ main {
                 }
             }
         }
+        .loader {
+            position: relative;
+            top: 20px;
+        }
     }
 }
 
@@ -303,7 +307,8 @@ main {
             }
             form {
                 width: 100%;
-                padding: 20px;
+                padding: 30px;
+                font-size: 14px;
 
                 fieldset.form-group {
                     display: block;

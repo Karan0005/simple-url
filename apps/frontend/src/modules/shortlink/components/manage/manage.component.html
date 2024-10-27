@@ -38,6 +38,7 @@
                             <!-- Original URL cell -->
                             <td>
                                 <span
+                                    [title]="data.OriginalLink"
                                     class="truncate"
                                     *ngIf="editingShortLink !== data.ShortLink"
                                     >{{ data.OriginalLink }}</span
@@ -46,7 +47,7 @@
                                     *ngIf="editingShortLink === data.ShortLink"
                                     type="text"
                                     class="form-control"
-                                    [(ngModel)]="data.OriginalLink"
+                                    [(ngModel)]="editingOriginalLink"
                                 />
                             </td>
                             <!-- Shortened link with copy button -->
@@ -85,21 +86,22 @@
                                     class="btn btn-link p-0"
                                     aria-label="Edit"
                                     title="Edit"
-                                    (click)="editOriginalLink(data.ShortLink)"
+                                    (click)="editOriginalLink(data.ShortLink, data.OriginalLink)"
                                 >
                                     <i class="bi bi-pencil-square edit"></i>
                                     <!-- Bootstrap pencil icon -->
                                 </button>
                                 <button
                                     *ngIf="editingShortLink === data.ShortLink"
-                                    class="btn btn-link p-0"
-                                    (click)="saveOriginalLink(data.OriginalLink)"
+                                    class="btn btn-primary"
+                                    (click)="saveOriginalLink()"
                                 >
-                                    <i class="bi bi-save2 save"></i>
+                                    Save
                                 </button>
 
                                 <!-- Delete button with trash icon -->
                                 <button
+                                    *ngIf="editingShortLink !== data.ShortLink"
                                     class="btn btn-link p-0"
                                     aria-label="Delete"
                                     title="Delete"
@@ -111,13 +113,12 @@
                             </td>
                         </tr>
 
-                        <div style="margin-top: 30px">
-                            <app-loader></app-loader>
-                        </div>
-
                         <!-- Additional rows can be added here -->
                     </tbody>
                 </table>
+                <div>
+                    <app-loader></app-loader>
+                </div>
             </div>
             <!-- End of responsive table container -->
         </div>

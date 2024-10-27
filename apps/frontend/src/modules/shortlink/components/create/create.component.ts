@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { IBaseResponse } from '@full-stack-project/shared';
 import { NGXLogger } from 'ngx-logger';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +13,7 @@ import { ICreateShortLinkRequest, ICreateShortLinkResponse } from '../../interfa
     templateUrl: './create.component.html',
     styleUrl: './create.component.scss'
 })
-export class CreateComponent {
+export class CreateComponent implements OnDestroy {
     shortLink = '';
     downloadableQRImage = '';
     shortLinkRequest: ICreateShortLinkRequest = {
@@ -50,35 +50,45 @@ export class CreateComponent {
 
     async convert() {
         this.formSubmitted = true;
+        if (
+            this.shortLinkRequest.OriginalLink &&
+            this.validateOriginalLink(this.shortLinkRequest.OriginalLink)
+        ) {
+            return;
+        }
         this.loaderService.showLoader();
 
         try {
-            if (this.selectedLinkType === 'qrcode') {
-                if (this.shortLinkRequest.OriginalLink && !this.downloadableQRImage) {
-                    this.generateQRCode();
-                }
+            if (
+                this.selectedLinkType === 'qrcode' &&
+                this.shortLinkRequest.OriginalLink &&
+                !this.downloadableQRImage
+            ) {
+                this.generateQRCode();
             }
 
-            if (this.selectedLinkType === 'shortlink') {
-                if (this.shortLinkRequest.OriginalLink && !this.shortLink) {
-                    try {
-                        const response: IBaseResponse<ICreateShortLinkResponse> =
-                            await this.apiService.post<
-                                ICreateShortLinkRequest,
-                                IBaseResponse<ICreateShortLinkResponse>
-                            >(ApiRoute.ShortLink.V1.Create, this.shortLinkRequest);
+            if (
+                this.selectedLinkType === 'shortlink' &&
+                this.shortLinkRequest.OriginalLink &&
+                !this.shortLink
+            ) {
+                try {
+                    const response: IBaseResponse<ICreateShortLinkResponse> =
+                        await this.apiService.post<
+                            ICreateShortLinkRequest,
+                            IBaseResponse<ICreateShortLinkResponse>
+                        >(ApiRoute.ShortLink.V1.Create, this.shortLinkRequest);
 
-                        if (response.IsSuccess) {
-                            this.shortLink = response.Data.ShortLink;
-                            this.toastr.info('Short link created successfully.');
-                        } else {
-                            this.toastr.error(response.Message);
-                        }
-                    } catch (error) {
-                        this.toastr.error(
-                            ((error as HttpErrorResponse).error as IBaseResponse<null>).Message
-                        );
+                    if (response.IsSuccess) {
+                        this.shortLink = response.Data.ShortLink;
+                        this.toastr.info('Short link created successfully.');
+                    } else {
+                        this.toastr.error(response.Message);
                     }
+                } catch (error) {
+                    this.toastr.error(
+                        ((error as HttpErrorResponse).error as IBaseResponse<null>).Message
+                    );
                 }
             }
         } finally {
@@ -145,6 +155,32 @@ export class CreateComponent {
                     printWindow.close();
                 };
             };
+        }
+    }
+
+    validateOriginalLink(link: string): boolean {
+        // Check if the link is less than 20 characters
+        const isTooShort = link.length < 30;
+
+        if (isTooShort) {
+            this.toastr.error('Original link is too short to convert.');
+            return true;
+        }
+
+        // Check if the link does not start with 'https'
+        const doesNotStartWithHttps = !link.startsWith('https://');
+
+        if (doesNotStartWithHttps) {
+            this.toastr.error('Original link must start with https.');
+            return true;
+        }
+
+        return false;
+    }
+
+    ngOnDestroy(): void {
+        if (this.loaderService.isLoading) {
+            this.loaderService.hideLoader();
         }
     }
 }

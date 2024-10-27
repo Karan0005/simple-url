@@ -11,6 +11,7 @@ import {
     IsNumber,
     IsOptional,
     IsString,
+    Matches,
     Max,
     MaxLength,
     Min,
@@ -24,8 +25,9 @@ export class CreateShortLinkValidator {
         description: 'OriginalLink provided by the user to be converted into short url',
         maxLength: 1000
     })
-    @MinLength(1, { message: 'OriginalLink must not be empty' })
+    @MinLength(30, { message: 'OriginalLink is too short' })
     @MaxLength(1000, { message: 'OriginalLink is too long' })
+    @Matches(/^https:\/\//, { message: 'OriginalLink must start with https' })
     OriginalLink!: string;
 
     @ApiProperty({
@@ -65,8 +67,9 @@ export class UpdateShortLinkValidator {
         description: 'OriginalLink provided by the user to be updated',
         maxLength: 1000
     })
-    @MinLength(1, { message: 'OriginalLink must not be empty' })
+    @MinLength(30, { message: 'OriginalLink is too short' })
     @MaxLength(1000, { message: 'OriginalLink is too long' })
+    @Matches(/^https:\/\//, { message: 'OriginalLink must start with https' })
     OriginalLink!: string;
 }
 

@@ -1,0 +1,39 @@
+/* Loader Container */
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Dot Style */
+.dot {
+    width: 10px;
+    height: 10px;
+    background-color: #007bff; /* Blue color */
+    border-radius: 50%;
+    animation: bounce 0.8s infinite ease-in-out;
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+    0%,
+    80%,
+    100% {
+        transform: translateY(0); /* Start and end position */
+    }
+    40% {
+        transform: translateY(-6px); /* Reduced bounce height */
+    }
+}
+
+/* Delay Each Dot */
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+.dot:nth-child(2) {
+    animation-delay: 0.3s;
+}
+.dot:nth-child(3) {
+    animation-delay: 0.6s;
+}

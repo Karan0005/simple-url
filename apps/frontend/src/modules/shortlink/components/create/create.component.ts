@@ -5,7 +5,7 @@ import { NGXLogger } from 'ngx-logger';
 import { ToastrService } from 'ngx-toastr';
 import * as QRCode from 'qrcode';
 import { ApiRoute } from '../../../shared/constants';
-import { RestApiService } from '../../../shared/services';
+import { LoaderService, RestApiService } from '../../../shared/services';
 import { ICreateShortLinkRequest, ICreateShortLinkResponse } from '../../interfaces';
 
 @Component({
@@ -26,7 +26,8 @@ export class CreateComponent {
     constructor(
         private readonly loggerService: NGXLogger,
         private readonly toastr: ToastrService,
-        private readonly apiService: RestApiService
+        private readonly apiService: RestApiService,
+        private readonly loaderService: LoaderService
     ) {}
 
     onLinkTypeChange(linkType?: string): void {
@@ -49,33 +50,39 @@ export class CreateComponent {
 
     async convert() {
         this.formSubmitted = true;
-        if (this.selectedLinkType === 'qrcode') {
-            if (this.shortLinkRequest.OriginalLink && !this.downloadableQRImage) {
-                this.generateQRCode();
-            }
-        }
+        this.loaderService.showLoader();
 
-        if (this.selectedLinkType === 'shortlink') {
-            if (this.shortLinkRequest.OriginalLink && !this.shortLink) {
-                try {
-                    const response: IBaseResponse<ICreateShortLinkResponse> =
-                        await this.apiService.post<
-                            ICreateShortLinkRequest,
-                            IBaseResponse<ICreateShortLinkResponse>
-                        >(ApiRoute.ShortLink.V1.Create, this.shortLinkRequest);
-
-                    if (response.IsSuccess) {
-                        this.shortLink = response.Data.ShortLink;
-                        this.toastr.info('Short link created successfully.');
-                    } else {
-                        this.toastr.error(response.Message);
-                    }
-                } catch (error) {
-                    this.toastr.error(
-                        ((error as HttpErrorResponse).error as IBaseResponse<null>).Message
-                    );
+        try {
+            if (this.selectedLinkType === 'qrcode') {
+                if (this.shortLinkRequest.OriginalLink && !this.downloadableQRImage) {
+                    this.generateQRCode();
                 }
             }
+
+            if (this.selectedLinkType === 'shortlink') {
+                if (this.shortLinkRequest.OriginalLink && !this.shortLink) {
+                    try {
+                        const response: IBaseResponse<ICreateShortLinkResponse> =
+                            await this.apiService.post<
+                                ICreateShortLinkRequest,
+                                IBaseResponse<ICreateShortLinkResponse>
+                            >(ApiRoute.ShortLink.V1.Create, this.shortLinkRequest);
+
+                        if (response.IsSuccess) {
+                            this.shortLink = response.Data.ShortLink;
+                            this.toastr.info('Short link created successfully.');
+                        } else {
+                            this.toastr.error(response.Message);
+                        }
+                    } catch (error) {
+                        this.toastr.error(
+                            ((error as HttpErrorResponse).error as IBaseResponse<null>).Message
+                        );
+                    }
+                }
+            }
+        } finally {
+            this.loaderService.hideLoader();
         }
     }
 

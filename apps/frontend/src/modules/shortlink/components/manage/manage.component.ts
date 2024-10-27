@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IBaseResponse } from '@full-stack-project/shared';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { ApiRoute } from '../../../shared/constants';
-import { RestApiService } from '../../../shared/services';
+import { LoaderService, RestApiService } from '../../../shared/services';
 import {
     IDeleteShortLinkRequest,
     IGetShortLinkListRequest,
@@ -18,7 +18,7 @@ import {
     templateUrl: './manage.component.html',
     styleUrl: './manage.component.scss'
 })
-export class ManageComponent {
+export class ManageComponent implements OnInit {
     page = 1;
     limit = 10;
     shortLinkList: IGetShortLinkListResponse = {
@@ -29,17 +29,22 @@ export class ManageComponent {
         ShortLinks: []
     };
     editingShortLink = '';
+    searchText = '';
+    isListLoading = false;
 
     private readonly searchSubject: Subject<string> = new Subject();
 
     constructor(
         private readonly toastr: ToastrService,
-        private readonly apiService: RestApiService
+        private readonly apiService: RestApiService,
+        private readonly loaderService: LoaderService
     ) {
         this.searchSubject
             .pipe(debounceTime(300), distinctUntilChanged())
             .subscribe((searchText: string) => {
-                this.list(searchText);
+                this.resetPage();
+                this.searchText = searchText;
+                this.list(this.searchText);
             });
     }
 
@@ -49,7 +54,55 @@ export class ManageComponent {
         this.searchSubject.next(searchText);
     }
 
+    async ngOnInit(): Promise<void> {
+        this.list('');
+        window.addEventListener('scroll', this.onScroll.bind(this));
+    }
+
+    onScroll(): void {
+        // Get the total height of the document
+        const documentHeight = document.documentElement.scrollHeight;
+
+        // Get the height of the viewport
+        const windowHeight = window.innerHeight;
+
+        // Calculate the distance from the bottom
+        const scrollPosition = window.scrollY;
+
+        // Set the threshold, e.g., 100 pixels from the bottom
+        const threshold = 100;
+
+        // Check if the user has scrolled to the bottom within the threshold
+        if (scrollPosition + windowHeight >= documentHeight - threshold) {
+            this.list(this.searchText);
+        }
+    }
+
+    resetPage() {
+        this.shortLinkList = {
+            TotalItems: 0,
+            CurrentPage: 1,
+            TotalPages: 0,
+            LinkBaseURL: '',
+            ShortLinks: []
+        };
+        this.editingShortLink = '';
+        this.page = 1;
+        this.limit = 10;
+    }
+
     async list(searchText: string) {
+        if (this.isListLoading) {
+            return;
+        }
+
+        if (this.shortLinkList.CurrentPage === this.shortLinkList.TotalPages) {
+            return;
+        }
+
+        this.isListLoading = true;
+        this.loaderService.showLoader();
+
         try {
             const response: IBaseResponse<IGetShortLinkListResponse> =
                 await this.apiService.getWithPayload<
@@ -62,12 +115,23 @@ export class ManageComponent {
                 });
 
             if (response.IsSuccess) {
-                this.shortLinkList = response.Data;
+                this.shortLinkList.TotalItems = response.Data.TotalItems;
+                this.shortLinkList.CurrentPage = response.Data.CurrentPage;
+                this.shortLinkList.TotalPages = response.Data.TotalPages;
+                this.shortLinkList.LinkBaseURL = response.Data.LinkBaseURL;
+                this.shortLinkList.ShortLinks = [
+                    ...this.shortLinkList.ShortLinks,
+                    ...response.Data.ShortLinks
+                ];
+                this.page++;
             } else {
                 this.toastr.error(response.Message);
             }
         } catch (error) {
             this.toastr.error(((error as HttpErrorResponse).error as IBaseResponse<null>).Message);
+        } finally {
+            this.isListLoading = false;
+            this.loaderService.hideLoader();
         }
     }
 
@@ -137,5 +201,11 @@ export class ManageComponent {
     async saveOriginalLink(originalLink: string) {
         await this.update(this.editingShortLink, originalLink);
         this.editingShortLink = '';
+    }
+
+    copyToClipboard(value: string) {
+        navigator.clipboard.writeText(value).then(() => {
+            this.toastr.info('Copied to clipboard');
+        });
     }
 }

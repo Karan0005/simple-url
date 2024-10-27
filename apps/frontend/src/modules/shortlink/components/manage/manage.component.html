@@ -1,59 +1,128 @@
+<!-- Main container to center content and add margin-top for spacing -->
 <div class="container mt-5">
-    <table class="table table-hover table-records">
-        <thead>
-            <tr>
-                <th scope="col">Original URL</th>
-                <th scope="col">Short Link</th>
-                <th scope="col">Status</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>https://klkgd/hkjyiu/hsiatyd/hsijdy</td>
-                <td>https://abc.com</td>
-                <td>
-                    <div class="form-check form-switch">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            id="flexSwitchCheckChecked1"
-                            checked
-                        />
-                    </div>
-                </td>
-                <td class="actions">
-                    <button class="btn btn-link p-0" aria-label="Edit" title="Edit">
-                        <i class="bi bi-pencil-square edit"></i>
-                    </button>
-                    <button class="btn btn-link p-0" aria-label="Delete" title="Delete">
-                        <i class="bi bi-trash delete"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>https://klkgd/hkjyiu/hsiatyd/hsijdyhttps:</td>
-                <td>https://abc.com</td>
-                <td>
-                    <div class="form-check form-switch">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            id="flexSwitchCheckChecked2"
-                            checked
-                        />
-                    </div>
-                </td>
-                <td class="actions">
-                    <button class="btn btn-link p-0" aria-label="Edit" title="Edit">
-                        <i class="bi bi-pencil-square edit"></i>
-                    </button>
-                    <button class="btn btn-link p-0" aria-label="Delete" title="Delete">
-                        <i class="bi bi-trash delete"></i>
-                    </button>
-                </td>
-            </tr>
-            <!-- Add more rows as needed -->
-        </tbody>
-    </table>
+    <!-- Bootstrap card component for structured layout -->
+    <div class="card">
+        <!-- Card body where the form and table are placed -->
+        <div class="card-body">
+            <!-- Search field for searching short links -->
+            <div class="mb-3 d-flex">
+                <label for="searchShortLink" class="form-label">Search Short Link</label>
+                <!-- Input field for entering search query, with Angular's input event binding -->
+                <input
+                    type="text"
+                    class="form-control search-link"
+                    id="searchShortLink"
+                    placeholder="type your short link to search"
+                    (input)="onSearchChange($event)"
+                />
+            </div>
+            <!-- Responsive table container to make the table scrollable on small screens -->
+            <div class="table-responsive mt-4">
+                <!-- Bootstrap table with hover effect for rows -->
+                <table class="table table-hover table-records">
+                    <thead>
+                        <tr>
+                            <th scope="col">Original URL</th>
+                            <!-- Column for the original full URL -->
+                            <th scope="col">Short Link</th>
+                            <!-- Column for the shortened link -->
+                            <th scope="col">Status</th>
+                            <!-- Column for active/inactive status -->
+                            <th scope="col">Actions</th>
+                            <!-- Column for action buttons (Edit, Delete) -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sample row of data -->
+                        <tr *ngFor="let data of shortLinkList.ShortLinks">
+                            <!-- Original URL cell -->
+                            <td>
+                                <span
+                                    class="truncate"
+                                    *ngIf="editingShortLink !== data.ShortLink"
+                                    >{{ data.OriginalLink }}</span
+                                >
+                                <input
+                                    *ngIf="editingShortLink === data.ShortLink"
+                                    type="text"
+                                    class="form-control"
+                                    [(ngModel)]="data.OriginalLink"
+                                />
+                            </td>
+                            <!-- Shortened link with copy button -->
+                            <td class="shortlink-copy">
+                                <span>{{ shortLinkList.LinkBaseURL + '/' + data.ShortLink }}</span>
+                                <button
+                                    class="btn btn-link p-0"
+                                    aria-label="Copy"
+                                    title="Copy"
+                                    (click)="
+                                        copyToClipboard(
+                                            shortLinkList.LinkBaseURL + '/' + data.ShortLink
+                                        )
+                                    "
+                                >
+                                    <i class="bi bi-copy copy"></i>
+                                </button>
+                            </td>
+                            <!-- Status cell with a toggle switch -->
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        id="flexSwitchCheckChecked1"
+                                        [checked]="!data.IsDisabled"
+                                        (change)="updateStatus(data.ShortLink, !data.IsDisabled)"
+                                    />
+                                </div>
+                            </td>
+                            <!-- Actions cell with Edit and Delete buttons -->
+                            <td class="actions">
+                                <!-- Edit button with pencil icon -->
+                                <button
+                                    *ngIf="editingShortLink !== data.ShortLink"
+                                    class="btn btn-link p-0"
+                                    aria-label="Edit"
+                                    title="Edit"
+                                    (click)="editOriginalLink(data.ShortLink)"
+                                >
+                                    <i class="bi bi-pencil-square edit"></i>
+                                    <!-- Bootstrap pencil icon -->
+                                </button>
+                                <button
+                                    *ngIf="editingShortLink === data.ShortLink"
+                                    class="btn btn-link p-0"
+                                    (click)="saveOriginalLink(data.OriginalLink)"
+                                >
+                                    <i class="bi bi-save2 save"></i>
+                                </button>
+
+                                <!-- Delete button with trash icon -->
+                                <button
+                                    class="btn btn-link p-0"
+                                    aria-label="Delete"
+                                    title="Delete"
+                                    (click)="delete(data.ShortLink)"
+                                >
+                                    <i class="bi bi-trash delete"></i>
+                                    <!-- Bootstrap trash icon -->
+                                </button>
+                            </td>
+                        </tr>
+
+                        <div style="margin-top: 30px">
+                            <app-loader></app-loader>
+                        </div>
+
+                        <!-- Additional rows can be added here -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- End of responsive table container -->
+        </div>
+        <!-- End of card-body -->
+    </div>
+    <!-- End of card -->
 </div>
+<!-- End of container -->

@@ -1,44 +1,233 @@
-@import '../../../../variables.scss';
-.table-records {
-    --bs-table-bg: #182033;
-    --bs-table-color: #fff;
-    border-radius: 35px;
-    overflow: hidden;
-    thead {
-        --bs-table-bg-state: #1d263c;
-        font-size: 18px;
-        font-weight: bold;
+@import '../../../../variables.scss'; // Import global variables from another SCSS file
+
+.card {
+    border: none; // Remove card border
+    background: none; // Remove background from card
+
+    .card-body {
+        background: #182033; // Set background color for card body
+        border-radius: 30px; // Rounded corners for card body
+        padding: 20px; // Padding inside card body
+        margin-bottom: 50px;
+
+        div {
+            color: $primary-color; // Set text color from a global variable
+            align-items: center;
+            label {
+                font-size: 18px; // Set font size for labels
+                width: 70%;
+                margin-bottom: 0px;
+            }
+            .search-link {
+                border-radius: 100px; // Rounded edges for the search link input field
+                background-color: $ternary-color; // Background color from a global variable
+                padding: 10px 20px; // Padding inside search input
+                width: 30%;
+            }
+        }
+
+        .table-records {
+            --bs-table-bg: #1d2840; // Background color for the table
+            --bs-table-color: #fff; // Text color for table
+            border-radius: 25px; // Rounded corners for table
+            overflow: hidden; // Hide overflow content
+
+            thead {
+                --bs-table-bg-state: #1d263c; // Background color for table header rows on hover or active
+                font-size: 18px; // Font size for table header
+                font-weight: bold; // Bold text for table header
+            }
+
+            tr {
+                th {
+                    padding: 20px; // Padding inside table header cells
+                }
+                td {
+                    padding: 20px; // Padding inside table body cells
+                    white-space: nowrap; // Prevent table data from wrapping
+
+                    .truncate {
+                        display: inline-block; // Display as inline-block to allow truncation
+                        max-width: 300px; // Maximum width for truncation
+                        white-space: nowrap; // Prevent text wrapping
+                        overflow: hidden; // Hide overflowing text
+                        text-overflow: ellipsis; // Display ellipsis (...) for truncated text
+                        vertical-align: middle; // Vertically align text in the middle
+                    }
+
+                    // Style the copy button
+                    button.btn-link {
+                        vertical-align: middle; // Align the button with the text
+                    }
+
+                    // Style the copy icon
+                    .copy {
+                        color: #46a6ff; // Set color for copy icon
+                        font-size: 20px; // Set size for copy icon
+                        margin-left: 30px; // Add space between the URL and the copy icon
+                        font-weight: bold !important; // Ensure bold weight for copy icon
+                    }
+
+                    .bi-copy::before {
+                        font-weight: bold !important; // Make sure the Bootstrap icon is bold
+                    }
+
+                    // Style the edit icon
+                    .edit,
+                    .save {
+                        color: #46a6ff; // Set color for edit icon
+                        font-size: 20px; // Set size for edit icon
+                        margin-right: 15px; // Add space between edit and delete icons
+                    }
+
+                    // Style the delete icon
+                    .delete {
+                        color: #d02b2b; // Set color for delete icon
+                        font-size: 20px; // Set size for delete icon
+                    }
+
+                    // Style the toggle switch inside the form-check
+                    .form-check {
+                        input {
+                            width: 35px; // Set width for the toggle switch
+                            height: 20px; // Set height for the toggle switch
+                        }
+
+                        // Change cursor to pointer when hovering over the toggle switch
+                        :hover {
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+
+            // Remove bottom border from the last row
+            tr:last-child {
+                td {
+                    border-bottom: none;
+                }
+            }
+        }
+
+        // Hover effect for table rows
+        .table-hover > tbody > tr:hover > * {
+            --bs-table-color-state: #fff; // Set text color on row hover
+            --bs-table-bg-state: #1d263c; // Set background color on row hover
+        }
+    }
+}
+.shortlink-copy {
+    span {
+        display: inline-block !important;
+        max-width: 220px !important; /* Set max-width to ensure consistency */
+    }
+}
+/* Media Queries for Responsive Design */
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    .container {
+        max-width: 95%; // Set container max width to 95% for extra small screens
+    }
+    .card-body {
+        div {
+            flex-direction: column;
+            justify-content: center;
+            label {
+                width: 100% !important;
+                margin-left: 25px;
+                margin-bottom: 5px !important;
+            }
+            .search-link {
+                width: 100% !important;
+            }
+        }
     }
     tr {
-        th {
-            padding: 20px;
-        }
         td {
-            padding: 20px;
-            .edit {
-                color: #46a6ff;
-                font-size: 20px;
-                margin-right: 20px;
+            .truncate {
+                max-width: 150px !important; // Reduce truncation width for medium screens
             }
-            .delete {
-                color: #d02b2b;
-                font-size: 20px;
+        }
+    }
+    .shortlink-copy {
+        span {
+            display: inline-block;
+            max-width: 120px !important; /* Set max-width to ensure consistency */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        button {
+            i {
+                position: relative;
+                top: -7px;
+                margin-left: 15px !important;
             }
-            .form-check {
-                input {
-                    width: 40px;
-                    height: 20px;
+        }
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .container {
+        max-width: 80% !important; // Set container max width to 80% for small screens
+    }
+    .card-body {
+        div {
+            label {
+                width: 50% !important;
+            }
+            .search-link {
+                width: 50% !important;
+            }
+        }
+    }
+    tr {
+        td {
+            .truncate {
+                max-width: 200px !important; // Reduce truncation width for medium screens
+            }
+        }
+    }
+    .shortlink-copy {
+        span {
+            display: inline-block;
+            max-width: 120px !important; /* Set max-width to ensure consistency */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        button {
+            i {
+                position: relative;
+                top: -7px;
+                margin-left: 15px !important;
+            }
+        }
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .container {
+        max-width: 80% !important; // Set container max width to 80% for medium screens
+        .card-body {
+            div {
+                label {
+                    width: 50%;
+                }
+                .search-link {
+                    width: 50%;
+                }
+            }
+        }
+        tr {
+            td {
+                .truncate {
+                    max-width: 200px !important; // Reduce truncation width for medium screens
                 }
             }
         }
     }
-    tr:last-child {
-        td {
-            border-bottom: none;
-        }
-    }
-}
-.table-hover > tbody > tr:hover > * {
-    --bs-table-color-state: #fff;
-    --bs-table-bg-state: #1d263c;
 }

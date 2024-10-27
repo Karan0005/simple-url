@@ -18,14 +18,14 @@ body {
     height: 100vh;
     font-family: 'Roboto', Arial, Helvetica, sans-serif !important;
 }
-.simple-url::after {
+body::after {
     content: '';
     position: fixed;
     top: 200px;
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('../../frontend/src/assets/images/background-pattern.png') no-repeat;
+    background: url('../../frontend/src/assets/images/pattern.png') no-repeat;
     background-size: contain;
     background-position: right bottom;
     z-index: -1;

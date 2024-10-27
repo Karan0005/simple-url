@@ -116,6 +116,10 @@
                     <p><i class="bi bi-exclamation-circle-fill"></i> This field is required.</p>
                 </div>
 
+                <div style="margin-top: 30px">
+                    <app-loader></app-loader>
+                </div>
+
                 <!-- Display generated Short Link with option to copy -->
                 <div class="output-link input-group mt-3" *ngIf="shortLink">
                     <input
@@ -171,6 +175,10 @@
                 <!-- Error message in case of invalid input -->
                 <div class="error-message" *ngIf="formSubmitted && !shortLinkRequest.OriginalLink">
                     <p><i class="bi bi-exclamation-circle-fill"></i> This field is required.</p>
+                </div>
+
+                <div style="margin-top: 30px">
+                    <app-loader></app-loader>
                 </div>
 
                 <!-- QR Code display and download/print options -->

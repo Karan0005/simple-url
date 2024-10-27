@@ -131,7 +131,7 @@ export class ConvertService implements IConvertService {
 
         return {
             TotalItems: totalItems,
-            CurrentPage: Page,
+            CurrentPage: totalItems === 0 ? 0 : Page,
             TotalPages: Math.ceil(totalItems / Limit),
             LinkBaseURL: this.configService.get('server.apiBaseURL') as string,
             ShortLinks: shortLinks

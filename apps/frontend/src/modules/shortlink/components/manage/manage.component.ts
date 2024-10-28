@@ -63,7 +63,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     async ngOnInit(): Promise<void> {
         const response: IBaseResponse<IGetShortLinkListResponse> | undefined = await this.getList(
-            this.searchText
+            ''
         );
         this.setGetListResponse(response);
         window.addEventListener('scroll', this.onScroll.bind(this));
@@ -99,6 +99,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             ShortLinks: []
         };
         this.editingShortLink = '';
+        this.editingOriginalLink = '';
         this.page = 1;
         this.limit = 10;
         this.isListLoading = false;
